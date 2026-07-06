@@ -15,7 +15,7 @@ apps/
 packages/
   shared/   # 공용 타입, 상수, 설정(siteConfig), zod 검증, Supabase 클라이언트 헬퍼
 supabase/
-  migrations/  # 0001_schema.sql, 0002_rls.sql
+  migrations/  # 0001_schema.sql, 0002_rls.sql, 0003_post_images.sql
   seed.sql     # 8개 카테고리, 자동 승급 규칙(OFF), 샘플 글
 ```
 
@@ -47,9 +47,10 @@ NEXT_PUBLIC_ADMIN_SITE_URL=https://admin.actone.kr
 2. SQL Editor에서 순서대로 실행:
    - `supabase/migrations/0001_schema.sql`
    - `supabase/migrations/0002_rls.sql`
+   - `supabase/migrations/0003_post_images.sql`
    - `supabase/seed.sql`
    (또는 Supabase CLI: `supabase db push` 후 `supabase db seed`)
-3. Storage에 `avatars` 버킷은 0002 마이그레이션이 생성합니다(공개 읽기).
+3. Storage의 `avatars` 버킷은 0002, `post-images` 버킷은 0003 마이그레이션이 생성합니다(둘 다 공개 읽기).
 
 ## 카카오 OAuth 설정
 
@@ -118,7 +119,7 @@ values ('<user-uuid>', '<email-or-null>', true);
 
 ## 알려진 한계
 
-- 게시글 이미지 업로드(post_images)는 미구현(스키마 상 선택 항목). 아바타 업로드는 구현됨.
+- 게시글 이미지 업로드(post_images)는 구현됨(글당 최대 5장, jpg/png/webp, 각 5MB). 글/이미지 삭제 시 storage 원본은 남습니다(orphan).
 - 댓글 대댓글 없음(MVP 스펙).
 - 페이지네이션은 단순 페이지 번호 방식(카테고리 보드), 검색은 ilike 기반.
 - 실제 Supabase 프로젝트에 대해 E2E 검증은 하지 않음(마이그레이션은 코드 리뷰 수준으로 검증). `ACTONE_TODO_NEXT_MODEL.md` 참고.

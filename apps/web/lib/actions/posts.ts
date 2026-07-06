@@ -12,6 +12,32 @@ import {
 import { createClient } from "@/lib/supabase";
 import type { ActionState } from "./auth";
 
+// only accept URLs that point into the caller's own folder of the
+// post-images bucket — blocks arbitrary external image URLs
+function ownPostImageUrls(formData: FormData, userId: string): string[] {
+  const prefix = `/storage/v1/object/public/post-images/${userId}/`;
+  return formData
+    .getAll("image_urls")
+    .filter((v): v is string => typeof v === "string" && v.includes(prefix));
+}
+
+async function replacePostImages(
+  supabase: Awaited<ReturnType<typeof createClient>>,
+  postId: string,
+  imageUrls: string[],
+) {
+  await supabase.from("post_images").delete().eq("post_id", postId);
+  if (imageUrls.length > 0) {
+    await supabase.from("post_images").insert(
+      imageUrls.map((url, index) => ({
+        post_id: postId,
+        image_url: url,
+        sort_order: index,
+      })),
+    );
+  }
+}
+
 function parseMeetupForm(formData: FormData) {
   return {
     region: (formData.get("meetup_region") as string) ?? "",
@@ -55,6 +81,7 @@ export async function createPost(
     title: formData.get("title"),
     content: formData.get("content"),
     tags: parseTags((formData.get("tags") as string) ?? ""),
+    image_urls: ownPostImageUrls(formData, user.id),
     meetup: parseMeetupForm(formData),
   });
   if (!parsed.success) {
@@ -83,6 +110,10 @@ export async function createPost(
 
   if (error || !post) {
     return { error: "글 작성 권한이 없거나 저장에 실패했습니다." };
+  }
+
+  if (parsed.data.image_urls.length > 0) {
+    await replacePostImages(supabase, post.id, parsed.data.image_urls);
   }
 
   if ((category as Category).slug === CATEGORY_SLUGS.offlineMeetups && parsed.data.meetup) {
@@ -119,6 +150,7 @@ export async function updatePost(
     title: formData.get("title"),
     content: formData.get("content"),
     tags: parseTags((formData.get("tags") as string) ?? ""),
+    image_urls: ownPostImageUrls(formData, user.id),
     meetup: parseMeetupForm(formData),
   });
   if (!parsed.success) {
@@ -144,6 +176,8 @@ export async function updatePost(
     })
     .eq("id", postId);
   if (error) return { error: "수정에 실패했습니다. 다시 시도해주세요." };
+
+  await replacePostImages(supabase, postId, parsed.data.image_urls);
 
   const { data: category } = await supabase
     .from("categories")

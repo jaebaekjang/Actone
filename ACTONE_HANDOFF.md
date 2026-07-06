@@ -11,16 +11,18 @@
 - 오프라인 모임 신청 링크 서버측 접근 제한(뷰 + security definer RPC)
 - 분리된 관리자 사이트 전체(대시보드~관리자 계정 관리)
 - 푸터(사업자 정보/소셜), 카카오채널 플로팅 버튼, 모바일 하단 내비
+- 게시글 이미지 업로드(post_images, 0003 마이그레이션 + write/edit 폼 + 상세 렌더)
+- 검색 결과 오프라인 모임 카드에 meetup 정보 표시
 - lint/build 양쪽 앱 통과 (ACTONE_FEATURE_STATUS.md 참고)
 
 ## 부분 완료 / 미검증
 
 - **Supabase 실인스턴스 검증 0%**: 마이그레이션/seed/RLS/카카오 OAuth 전부 실제 프로젝트에서 실행해봐야 함. 최우선 작업 — `ACTONE_TODO_NEXT_MODEL.md`의 시나리오 참고.
-- 아바타 업로드는 구현됐지만 실제 Storage에 대해 미검증.
+- 아바타/게시글 이미지 업로드는 구현됐지만 실제 Storage에 대해 미검증.
 
 ## 미구현 (스펙상 선택)
 
-- 게시글 이미지 업로드(post_images 테이블 + write 폼 업로드)
+- 없음 — 스펙 내 선택 기능(post_images)까지 구현 완료.
 
 ## 핵심 파일 경로
 
@@ -50,6 +52,7 @@ apps/admin/
 
 supabase/migrations/0001_schema.sql   # 테이블/인덱스/카운터 트리거/handle_new_user
 supabase/migrations/0002_rls.sql      # RLS 전체 + 보호 트리거 + 뷰 + RPC + 자동 승급 + avatars 버킷
+supabase/migrations/0003_post_images.sql  # post_images 테이블/RLS/5장 제한 트리거 + post-images 버킷
 supabase/seed.sql                     # 카테고리 8개, rule(OFF), 샘플 글
 ```
 

@@ -1,3 +1,4 @@
+import Image from "next/image";
 import Link from "next/link";
 import { notFound } from "next/navigation";
 import { CalendarDays, Clock, ExternalLink, MapPin, Pencil, Users, Wallet } from "lucide-react";
@@ -10,6 +11,7 @@ import {
   type Comment,
   type MeetupPublicDetails,
   type Post,
+  type PostImage,
 } from "@actone/shared";
 import { CommentForm } from "@/components/comment-form";
 import { DeleteCommentButton, DeletePostButton } from "@/components/delete-buttons";
@@ -67,13 +69,18 @@ export default async function PostDetailPage({
     }
   }
 
-  const [commentsRes, likeRes, bookmarkRes] = await Promise.all([
+  const [commentsRes, imagesRes, likeRes, bookmarkRes] = await Promise.all([
     supabase
       .from("comments")
       .select("*")
       .eq("post_id", postId)
       .eq("status", "published")
       .order("created_at", { ascending: true }),
+    supabase
+      .from("post_images")
+      .select("*")
+      .eq("post_id", postId)
+      .order("sort_order", { ascending: true }),
     user
       ? supabase
           .from("post_likes")
@@ -93,6 +100,7 @@ export default async function PostDetailPage({
   ]);
 
   const comments = await attachCommentAuthors((commentsRes.data as Comment[] | null) ?? []);
+  const images = (imagesRes.data as PostImage[] | null) ?? [];
 
   return (
     <article className="mx-auto max-w-3xl">
@@ -221,6 +229,21 @@ export default async function PostDetailPage({
       <div className="mt-6 whitespace-pre-wrap leading-relaxed text-foreground">
         {post.content}
       </div>
+
+      {images.length > 0 ? (
+        <div className="mt-6 space-y-3">
+          {images.map((image) => (
+            <Image
+              key={image.id}
+              src={image.image_url}
+              alt=""
+              width={768}
+              height={512}
+              className="h-auto w-full rounded-xl border object-contain"
+            />
+          ))}
+        </div>
+      ) : null}
 
       {post.tags.length > 0 ? (
         <div className="mt-5 flex flex-wrap gap-2">
