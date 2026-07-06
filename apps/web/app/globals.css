@@ -1,9 +1,10 @@
 @import "tailwindcss";
 
 @theme {
-  --font-sans: "Pretendard Variable", Pretendard, -apple-system, BlinkMacSystemFont,
-    system-ui, Roboto, "Apple SD Gothic Neo", "Noto Sans KR", "Malgun Gothic", sans-serif;
-  /* call-sheet / credit-roll labels */
+  --font-sans: var(--font-noto-sans-kr), "Noto Sans KR", "Pretendard Variable",
+    Pretendard, -apple-system, BlinkMacSystemFont, system-ui,
+    "Apple SD Gothic Neo", "Malgun Gothic", sans-serif;
+  /* real English handles / stamp labels only — not for decoration */
   --font-mono: ui-monospace, "SF Mono", "Cascadia Mono", "Roboto Mono", Consolas,
     "Liberation Mono", monospace;
 
@@ -40,7 +41,9 @@
   h1,
   h2,
   h3 {
-    letter-spacing: -0.015em;
+    font-weight: 800;
+    letter-spacing: -0.02em;
+    line-height: 1.35;
     text-wrap: balance;
   }
   :focus-visible {
@@ -50,28 +53,24 @@
 }
 
 @layer components {
-  /* small uppercase call-sheet label: WAITING ROOM · ACT 01 · CALL SHEET */
+  /* small Korean section label — quiet, no fake-English decoration */
   .t-label {
-    font-family: var(--font-mono);
-    font-size: 0.6875rem;
-    font-weight: 500;
-    letter-spacing: 0.18em;
-    text-transform: uppercase;
+    font-size: 0.8125rem;
+    font-weight: 700;
+    letter-spacing: 0.01em;
     color: var(--color-accent);
   }
   .t-label-dim {
-    font-family: var(--font-mono);
-    font-size: 0.6875rem;
-    font-weight: 500;
-    letter-spacing: 0.18em;
-    text-transform: uppercase;
+    font-size: 0.8125rem;
+    font-weight: 700;
+    letter-spacing: 0.01em;
     color: var(--color-dim);
   }
   /* theater poster display heading */
   .t-display {
     font-weight: 800;
-    letter-spacing: -0.02em;
-    line-height: 1.28;
+    letter-spacing: -0.025em;
+    line-height: 1.3;
     text-wrap: balance;
   }
   /* a single dim stage spotlight — the only large gradient allowed on the site */

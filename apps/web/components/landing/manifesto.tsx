@@ -9,7 +9,7 @@ export function ActOneManifesto() {
   return (
     <section className="border-b bg-surface">
       <div className="mx-auto max-w-5xl px-4 py-16 md:py-20">
-        <p className="t-label">Backstage Rules</p>
+        <p className="t-label">무대 뒤 약속</p>
         <h2 className="t-display mt-3 text-xl text-foreground md:text-2xl">
           액트원이 하지 않는 것
         </h2>
@@ -30,7 +30,7 @@ export function ActOneManifesto() {
                   </span>
                   {declaration.text}
                 </p>
-                <span className="t-label-dim shrink-0 rounded border border-dim/50 px-2 py-1 sm:-rotate-1">
+                <span className="shrink-0 rounded border border-dim/50 px-2 py-1 font-mono text-[11px] font-medium uppercase tracking-wider text-dim sm:-rotate-1">
                   {declaration.stamp}
                 </span>
               </li>

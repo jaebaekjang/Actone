@@ -29,7 +29,7 @@ export function SocialChannels() {
   return (
     <section className="border-b bg-surface">
       <div className="mx-auto max-w-5xl px-4 py-16 md:py-20">
-        <p className="t-label">Outside the Theater</p>
+        <p className="t-label">SNS 채널</p>
         <h2 className="t-display mt-3 text-xl text-foreground md:text-2xl">
           액트원은 밖에서도 이어집니다
         </h2>

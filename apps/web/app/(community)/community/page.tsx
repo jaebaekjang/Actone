@@ -151,7 +151,7 @@ export default async function CommunityHomePage() {
     <div className="space-y-9">
       {/* waiting room heading */}
       <section>
-        <p className="t-label">Waiting Room</p>
+        <p className="t-label">배우들의 온라인 대기실</p>
         <h1 className="t-display mt-2 text-2xl text-foreground">오늘의 대기실</h1>
         <p className="mt-1.5 text-sm text-muted">
           지금 배우들이 나누고 있는 이야기 — 혼자 삼킨 경험이 누군가에게는
@@ -208,8 +208,7 @@ export default async function CommunityHomePage() {
 
       {/* today's question */}
       <section className="paper-card rounded-xl p-5">
-        <p className="t-label-dim">Today&apos;s Note</p>
-        <p className="mt-1 text-xs font-medium text-accent">오늘의 질문</p>
+        <p className="text-sm font-bold text-accent">오늘의 질문</p>
         <p className="mt-1.5 font-medium leading-relaxed text-foreground">{todayQuestion}</p>
         <Link
           href={`/write?category=${CATEGORY_SLUGS.freeBoard}`}
@@ -222,8 +221,7 @@ export default async function CommunityHomePage() {
       {/* this week's offline meetups */}
       {meetupPosts.length > 0 ? (
         <section>
-          <p className="t-label-dim">This Week</p>
-          <h2 className="mt-1 text-lg font-bold text-foreground">이번 주 오프라인 모임</h2>
+          <h2 className="text-lg font-bold text-foreground">이번 주 오프라인 모임</h2>
           <div className="mt-3 space-y-3">
             {meetupPosts.map((post) => (
               <PostCard key={post.id} post={post} meetup={meetupMap.get(post.id)} />
@@ -234,8 +232,7 @@ export default async function CommunityHomePage() {
 
       {/* today's new posts (falls back to recent) */}
       <section>
-        <p className="t-label-dim">Fresh Ink</p>
-        <h2 className="mt-1 text-lg font-bold text-foreground">
+        <h2 className="text-lg font-bold text-foreground">
           {hasToday ? `오늘 새 글 ${todayPosts.length}` : "최근 글"}
         </h2>
         {!hasToday ? (
@@ -265,8 +262,7 @@ export default async function CommunityHomePage() {
       {/* most talked */}
       {talked.length > 0 ? (
         <section>
-          <p className="t-label-dim">Most Talked</p>
-          <h2 className="mt-1 text-lg font-bold text-foreground">댓글 많은 이야기</h2>
+          <h2 className="text-lg font-bold text-foreground">댓글 많은 이야기</h2>
           <div className="mt-3 space-y-3">
             {talked.map((post) => (
               <PostCard key={post.id} post={post} meetup={meetupMap.get(post.id)} />
@@ -278,8 +274,7 @@ export default async function CommunityHomePage() {
       {/* waiting for a reply */}
       {waiting.length > 0 ? (
         <section>
-          <p className="t-label-dim">Needs a Reply</p>
-          <h2 className="mt-1 text-lg font-bold text-foreground">답변 기다리는 글</h2>
+          <h2 className="text-lg font-bold text-foreground">답변 기다리는 글</h2>
           <p className="mt-1 text-sm text-dim">
             아직 아무도 답하지 않은 이야기입니다. 첫 댓글이 큰 힘이 됩니다.
           </p>
@@ -293,8 +288,7 @@ export default async function CommunityHomePage() {
 
       {/* all boards */}
       <section>
-        <p className="t-label-dim">All Rooms</p>
-        <h2 className="mt-1 text-lg font-bold text-foreground">모든 게시판</h2>
+        <h2 className="text-lg font-bold text-foreground">모든 게시판</h2>
         <div className="mt-3 grid gap-3 sm:grid-cols-2">
           {categories.map((category) => (
             <CategoryCard key={category.id} category={category} />

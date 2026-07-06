@@ -13,7 +13,7 @@ export function WaitingRoomPreview() {
   return (
     <section id="waiting-room" className="border-b bg-surface">
       <div className="mx-auto max-w-5xl px-4 py-16 md:py-20">
-        <p className="t-label">Act 01 · Live Board</p>
+        <p className="t-label">대기실 게시판</p>
         <h2 className="t-display mt-3 text-xl text-foreground md:text-2xl">
           지금 대기실에서 오가는 이야기
         </h2>

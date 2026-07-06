@@ -4,8 +4,7 @@ export function FinalCta() {
   return (
     <section className="stage-light">
       <div className="mx-auto max-w-3xl px-4 py-20 text-center md:py-28">
-        <p className="t-label">Curtain Call</p>
-        <h2 className="t-display mt-4 text-2xl text-foreground md:text-3xl">
+        <h2 className="t-display text-2xl text-foreground md:text-3xl">
           오늘도 혼자 버티고 있다면,
           <br />
           이제 함께 버텨요.

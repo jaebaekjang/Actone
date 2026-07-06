@@ -37,9 +37,15 @@ export function KakaoLoginButton({
       disabled={loading}
       className={className}
     >
-      <svg viewBox="0 0 24 24" className="h-5 w-5 fill-black" aria-hidden>
-        <path d="M12 3C6.48 3 2 6.52 2 10.86c0 2.78 1.85 5.22 4.63 6.6l-1.18 4.35c-.1.39.34.7.68.47l5.16-3.42c.23.02.47.03.71.03 5.52 0 10-3.52 10-7.86S17.52 3 12 3z" />
-      </svg>
+      {/* ticket stub: icon sits before a perforated edge */}
+      <span
+        className="inline-flex items-center border-r border-dashed border-black/30 pr-2.5"
+        aria-hidden
+      >
+        <svg viewBox="0 0 24 24" className="h-5 w-5 fill-black">
+          <path d="M12 3C6.48 3 2 6.52 2 10.86c0 2.78 1.85 5.22 4.63 6.6l-1.18 4.35c-.1.39.34.7.68.47l5.16-3.42c.23.02.47.03.71.03 5.52 0 10-3.52 10-7.86S17.52 3 12 3z" />
+        </svg>
+      </span>
       {loading ? "카카오로 이동 중…" : label}
     </Button>
   );

@@ -55,7 +55,7 @@ export function FindMyRoom() {
   return (
     <section className="border-b">
       <div className="mx-auto max-w-5xl px-4 py-16 md:py-20">
-        <p className="t-label">Act 02 · Find Your Room</p>
+        <p className="t-label">방 안내</p>
         <h2 className="t-display mt-3 text-xl text-foreground md:text-2xl">
           지금 내 상황에 맞는 방 찾기
         </h2>
@@ -84,8 +84,7 @@ export function FindMyRoom() {
 
         {picked ? (
           <div className="paper-card mt-6 rounded-xl p-5 md:p-6">
-            <p className="t-label-dim">Recommended Room</p>
-            <p className="mt-2 text-sm text-muted">당신에게 먼저 추천하는 방</p>
+            <p className="text-sm font-bold text-accent">당신에게 먼저 추천하는 방</p>
             <div className="mt-3 space-y-4">
               {picked.rooms.map((room) => (
                 <div key={room.slug}>

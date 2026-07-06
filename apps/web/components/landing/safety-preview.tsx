@@ -14,7 +14,7 @@ export function SafetyPreview() {
   return (
     <section className="border-b">
       <div className="mx-auto max-w-5xl px-4 py-16 md:py-20">
-        <p className="t-label">House Promise</p>
+        <p className="t-label">이용 수칙</p>
         <h2 className="t-display mt-3 text-xl text-foreground md:text-2xl">
           안전한 대기실을 지키는 약속
         </h2>

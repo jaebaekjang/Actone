@@ -9,7 +9,7 @@ export function WhoItIsFor() {
   return (
     <section className="border-b">
       <div className="mx-auto max-w-5xl px-4 py-16 md:py-20">
-        <p className="t-label">Act 04 · Who It&apos;s For</p>
+        <p className="t-label">함께하는 사람들</p>
         <h2 className="t-display mt-3 text-xl text-foreground md:text-2xl">
           이런 분들을 위한 커뮤니티입니다
         </h2>

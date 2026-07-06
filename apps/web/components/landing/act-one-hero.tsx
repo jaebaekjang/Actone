@@ -5,7 +5,6 @@ import { buttonStyles } from "@/components/ui/button";
 
 const HERO_NOTES = [
   {
-    label: "GREEN ROOM",
     category: "배우 생존방",
     title: "배우를 계속해도 되는지 모르겠을 때",
     comments: 12,
@@ -13,7 +12,6 @@ const HERO_NOTES = [
     drift: "drift",
   },
   {
-    label: "FIELD NOTE",
     category: "현장 후기방",
     title: "첫 촬영장에서 미리 알았으면 좋았을 것들",
     comments: 15,
@@ -21,7 +19,6 @@ const HERO_NOTES = [
     drift: "drift-delayed",
   },
   {
-    label: "REHEARSAL",
     category: "스터디",
     title: "독백 스터디 같이 할 사람 있나요?",
     comments: 6,
@@ -34,7 +31,7 @@ export function ActOneHero() {
   return (
     <section className="stage-light border-b">
       <div className="mx-auto max-w-5xl px-4 pb-16 pt-20 md:pb-24 md:pt-28">
-        <p className="t-label">Online Waiting Room</p>
+        <p className="t-label">배우들의 온라인 대기실</p>
         <h1 className="t-display mt-5 text-[1.75rem] text-foreground sm:text-4xl md:text-5xl">
           인맥 없이 배우를 시작했다면,
           <br />
@@ -67,11 +64,11 @@ export function ActOneHero() {
               key={note.title}
               className={`pinned-note paper-card rounded-lg p-4 ${note.tilt} ${note.drift}`}
             >
-              <div className="flex items-center justify-between gap-2">
-                <span className="t-label-dim">{note.label}</span>
-                <span className="text-xs text-accent-soft">{note.category}</span>
+              <div className="flex items-center justify-between gap-2 border-b border-dashed pb-2">
+                <span className="text-xs font-bold text-accent-soft">{note.category}</span>
+                <span className="h-1.5 w-1.5 rounded-full bg-accent/70" aria-hidden />
               </div>
-              <p className="mt-2 text-sm font-semibold leading-snug text-foreground">
+              <p className="mt-2.5 text-sm font-bold leading-snug text-foreground">
                 {note.title}
               </p>
               <p className="mt-2 inline-flex items-center gap-1 text-xs text-muted">
