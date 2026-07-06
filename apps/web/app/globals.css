@@ -106,6 +106,22 @@
   }
 }
 
+/* scroll-triggered reveal (activated by ScrollFx; no-op without JS) */
+[data-reveal] {
+  opacity: 1;
+}
+@media (prefers-reduced-motion: no-preference) {
+  [data-reveal] {
+    opacity: 0;
+    transform: translateY(18px);
+    transition: opacity 0.7s ease, transform 0.7s ease;
+  }
+  [data-reveal].revealed {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
 /* slow drift for the waiting-room preview notes in the hero */
 @keyframes drift {
   0%,

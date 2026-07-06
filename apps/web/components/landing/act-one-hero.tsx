@@ -5,18 +5,20 @@ import { KakaoLoginButton } from "@/components/kakao-login-button";
 export function ActOneHero() {
   return (
     <section className="festival-hero border-b">
-      <div className="mx-auto flex min-h-[72vh] max-w-4xl flex-col items-center justify-center px-4 py-24 text-center md:min-h-[78vh] md:py-32">
-        <p className="text-sm font-bold tracking-wide text-foreground/85">
-          멈추지 않는 배우들의 이야기
-        </p>
-        <p className="mt-3 text-lg font-medium text-foreground/90 md:text-xl">
-          인맥 없이 배우를 시작했다면,
-        </p>
-        <h1 className="t-display mt-2 text-4xl text-foreground sm:text-5xl md:text-6xl">
-          혼자 버티지 않아도
-          <br className="sm:hidden" /> 됩니다.
-        </h1>
-        <p className="mx-auto mt-7 max-w-xl leading-relaxed text-foreground/75">
+      <div className="mx-auto flex min-h-[78vh] max-w-6xl flex-col items-center justify-center px-4 py-24 text-center md:min-h-[86vh] md:py-32">
+        <div data-parallax>
+          <p className="text-sm font-bold tracking-wide text-foreground/85">
+            멈추지 않는 배우들의 이야기
+          </p>
+          <p className="mt-4 text-xl font-medium text-foreground/90 md:text-2xl">
+            인맥 없이 배우를 시작했다면,
+          </p>
+          <h1 className="t-display mt-2 text-[clamp(2.75rem,8.5vw,7rem)] leading-[1.12] text-foreground">
+            혼자 버티지
+            <br className="sm:hidden" /> 않아도 됩니다.
+          </h1>
+        </div>
+        <p className="mx-auto mt-9 max-w-xl leading-relaxed text-foreground/75">
           액트원은 오디션 정보, 현장 후기, 오프라인 모임, 스터디, 배우 생존
           이야기를 함께 나누는 배우 커뮤니티입니다.
         </p>

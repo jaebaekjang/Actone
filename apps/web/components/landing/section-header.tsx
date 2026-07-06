@@ -22,7 +22,7 @@ export function SectionHeader({
   linkLabel?: string;
 }) {
   return (
-    <div className="flex flex-wrap items-end justify-between gap-4">
+    <div className="flex flex-wrap items-end justify-between gap-4" data-reveal>
       <div>
         <p className="text-[13px] font-bold tracking-wide text-festival">{eyebrow}</p>
         <h2 className="t-display mt-2.5 text-xl text-foreground md:text-[1.625rem]">

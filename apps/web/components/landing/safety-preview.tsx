@@ -21,16 +21,19 @@ export function SafetyPreview() {
           linkLabel="이용수칙 전체 보기"
         />
 
-        <ul className="mt-7 grid gap-2 sm:grid-cols-2 lg:grid-cols-3">
-          {RULES.map((rule) => (
+        <ul className="mt-10 border-t border-foreground/12">
+          {RULES.map((rule, index) => (
             <li
               key={rule}
-              className="rounded-lg border bg-surface px-4 py-3 text-sm text-foreground"
+              data-reveal
+              className="flex items-center gap-4 border-b border-foreground/12 py-5 md:gap-8 md:py-6"
             >
-              <span className="mr-2 text-accent" aria-hidden>
-                ·
+              <span className="text-sm font-bold text-festival [font-variant-numeric:tabular-nums]">
+                {String(index + 1).padStart(2, "0")}
               </span>
-              {rule}
+              <span className="text-lg font-semibold text-foreground md:text-xl">
+                {rule}
+              </span>
             </li>
           ))}
         </ul>
