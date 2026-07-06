@@ -324,7 +324,7 @@ export function PostForm({
           <label className="flex items-center gap-2 text-sm text-foreground">
             <input
               type="checkbox"
-              className="accent-[#f97316]"
+              className="accent-[#d28a32]"
               {...form.register("meetup_regular_only")}
             />
             정회원 전용 모임

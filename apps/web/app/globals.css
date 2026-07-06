@@ -3,16 +3,21 @@
 @theme {
   --font-sans: "Pretendard Variable", Pretendard, -apple-system, BlinkMacSystemFont,
     system-ui, Roboto, "Apple SD Gothic Neo", "Noto Sans KR", "Malgun Gothic", sans-serif;
+  /* call-sheet / credit-roll labels */
+  --font-mono: ui-monospace, "SF Mono", "Cascadia Mono", "Roboto Mono", Consolas,
+    "Liberation Mono", monospace;
 
-  /* dark theater palette */
-  --color-background: #0f0f10;
-  --color-surface: #18181b;
-  --color-surface-soft: #232326;
-  --color-foreground: #f4f4f5;
-  --color-muted: #a1a1aa;
-  --color-accent: #f97316;
-  --color-accent-soft: #fdba74;
-  --color-line: #2f2f33;
+  /* deep theater palette — dark lobby, stage light, script paper */
+  --color-background: #0b0b0c;
+  --color-surface: #141416;
+  --color-surface-soft: #1c1c1f;
+  --color-foreground: #f4f1ea;
+  --color-muted: #a9a39a;
+  --color-dim: #736e67;
+  --color-accent: #d28a32;
+  --color-accent-soft: #e8b36a;
+  --color-paper: #e8ddc7;
+  --color-line: #29292d;
   --color-gold: #eab308;
   --color-kakao: #fee500;
 }
@@ -25,9 +30,97 @@
     background-color: var(--color-background);
     color: var(--color-foreground);
     font-family: var(--font-sans);
+    line-height: 1.7;
+    word-break: keep-all;
     -webkit-font-smoothing: antialiased;
   }
   * {
     border-color: var(--color-line);
+  }
+  h1,
+  h2,
+  h3 {
+    letter-spacing: -0.015em;
+    text-wrap: balance;
+  }
+  :focus-visible {
+    outline: 2px solid var(--color-accent);
+    outline-offset: 2px;
+  }
+}
+
+@layer components {
+  /* small uppercase call-sheet label: WAITING ROOM · ACT 01 · CALL SHEET */
+  .t-label {
+    font-family: var(--font-mono);
+    font-size: 0.6875rem;
+    font-weight: 500;
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+    color: var(--color-accent);
+  }
+  .t-label-dim {
+    font-family: var(--font-mono);
+    font-size: 0.6875rem;
+    font-weight: 500;
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+    color: var(--color-dim);
+  }
+  /* theater poster display heading */
+  .t-display {
+    font-weight: 800;
+    letter-spacing: -0.02em;
+    line-height: 1.28;
+    text-wrap: balance;
+  }
+  /* a single dim stage spotlight — the only large gradient allowed on the site */
+  .stage-light {
+    background:
+      radial-gradient(60% 48% at 50% 0%, rgba(210, 138, 50, 0.13), transparent 70%),
+      var(--color-background);
+  }
+  /* note pinned to the wall: lifts and catches light on hover */
+  .pinned-note {
+    transition: transform 0.2s ease, border-color 0.2s ease, box-shadow 0.2s ease;
+  }
+  .pinned-note:hover {
+    transform: translateY(-2px);
+    border-color: rgba(210, 138, 50, 0.35);
+    box-shadow: 0 10px 28px rgba(0, 0, 0, 0.45), 0 0 0 1px rgba(210, 138, 50, 0.08);
+  }
+  /* call sheet paper card */
+  .paper-card {
+    background: linear-gradient(180deg, rgba(232, 221, 199, 0.05), rgba(232, 221, 199, 0.015));
+    border: 1px solid rgba(232, 221, 199, 0.14);
+  }
+}
+
+/* slow drift for the waiting-room preview notes in the hero */
+@keyframes drift {
+  0%,
+  100% {
+    transform: translateY(0);
+  }
+  50% {
+    transform: translateY(-6px);
+  }
+}
+.drift {
+  animation: drift 7s ease-in-out infinite;
+}
+.drift-delayed {
+  animation: drift 7s ease-in-out 2.3s infinite;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .pinned-note,
+  .pinned-note:hover {
+    transition: none;
+    transform: none;
+  }
+  .drift,
+  .drift-delayed {
+    animation: none;
   }
 }

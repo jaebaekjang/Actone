@@ -13,11 +13,19 @@ export const siteConfig = {
   },
   // Empty string = link not ready yet → UI shows "준비 중입니다".
   socialLinks: {
-    instagram: "",
+    instagram: "https://www.instagram.com/act_one_community",
     kakaoChannel: "",
-    threads: "",
+    threads: "https://www.threads.net/@act_one_community",
     tiktok: "",
-    youtube: "",
+    youtube: "https://youtube.com/channel/UCgKEO5aVdEOQH_TzxSXwfwg",
+  },
+  // display handles shown next to the social labels
+  socialHandles: {
+    instagram: "act_one_community",
+    kakaoChannel: "",
+    threads: "act_one_community",
+    tiktok: "",
+    youtube: "장재백_액트원 · @액트원",
   },
 } as const;
 
