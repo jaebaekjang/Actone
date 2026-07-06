@@ -10,7 +10,9 @@ import {
 } from "@actone/shared";
 import { CategoryCard } from "@/components/category-card";
 import { EmptyState } from "@/components/empty-state";
+import { FeedHeading } from "@/components/community/feed-heading";
 import { PostCard } from "@/components/post-card";
+import { ScrollFx } from "@/components/landing/scroll-fx";
 import { SearchInput } from "@/components/search-input";
 import { buttonStyles } from "@/components/ui/button";
 import { attachRelations, getActiveCategories } from "@/lib/data";
@@ -148,16 +150,19 @@ export default async function CommunityHomePage() {
     ];
 
   return (
-    <div className="space-y-9">
+    <div className="space-y-10">
+      <ScrollFx />
       {/* waiting room heading */}
       <section>
         <p className="t-label">배우들의 온라인 대기실</p>
-        <h1 className="t-display mt-2 text-2xl text-foreground">오늘의 대기실</h1>
-        <p className="mt-1.5 text-sm text-muted">
+        <h1 className="t-display mt-2 text-[clamp(2rem,6vw,3.25rem)] leading-[1.15] text-foreground">
+          오늘의 대기실
+        </h1>
+        <p className="mt-3 max-w-xl leading-relaxed text-muted">
           지금 배우들이 나누고 있는 이야기 — 혼자 삼킨 경험이 누군가에게는
           준비물이 됩니다.
         </p>
-        <div className="mt-5 flex items-center gap-2">
+        <div className="mt-6 flex items-center gap-2">
           <SearchInput />
           <Link href="/write" className={buttonStyles("primary", "md", "shrink-0")}>
             <PenLine className="h-4 w-4" aria-hidden />
@@ -221,8 +226,8 @@ export default async function CommunityHomePage() {
       {/* this week's offline meetups */}
       {meetupPosts.length > 0 ? (
         <section>
-          <h2 className="text-lg font-bold text-foreground">이번 주 오프라인 모임</h2>
-          <div className="mt-3 space-y-3">
+          <FeedHeading eyebrow="이번 주" title="오프라인 모임" />
+          <div className="mt-4 space-y-3">
             {meetupPosts.map((post) => (
               <PostCard key={post.id} post={post} meetup={meetupMap.get(post.id)} />
             ))}
@@ -232,15 +237,12 @@ export default async function CommunityHomePage() {
 
       {/* today's new posts (falls back to recent) */}
       <section>
-        <h2 className="text-lg font-bold text-foreground">
-          {hasToday ? `오늘 새 글 ${todayPosts.length}` : "최근 글"}
-        </h2>
-        {!hasToday ? (
-          <p className="mt-1 text-sm text-dim">
-            오늘 올라온 글이 아직 없어요. 첫 글의 주인공이 되어보세요.
-          </p>
-        ) : null}
-        <div className="mt-3 space-y-3">
+        <FeedHeading
+          eyebrow={hasToday ? "새 글" : "최근"}
+          title={hasToday ? `오늘 새 글 ${todayPosts.length}` : "최근 글"}
+          sub={hasToday ? undefined : "오늘 올라온 글이 아직 없어요. 첫 글의 주인공이 되어보세요."}
+        />
+        <div className="mt-4 space-y-3">
           {feed.length > 0 ? (
             feed.map((post) => (
               <PostCard key={post.id} post={post} meetup={meetupMap.get(post.id)} />
@@ -262,8 +264,8 @@ export default async function CommunityHomePage() {
       {/* most talked */}
       {talked.length > 0 ? (
         <section>
-          <h2 className="text-lg font-bold text-foreground">댓글 많은 이야기</h2>
-          <div className="mt-3 space-y-3">
+          <FeedHeading eyebrow="인기" title="댓글 많은 이야기" />
+          <div className="mt-4 space-y-3">
             {talked.map((post) => (
               <PostCard key={post.id} post={post} meetup={meetupMap.get(post.id)} />
             ))}
@@ -274,11 +276,12 @@ export default async function CommunityHomePage() {
       {/* waiting for a reply */}
       {waiting.length > 0 ? (
         <section>
-          <h2 className="text-lg font-bold text-foreground">답변 기다리는 글</h2>
-          <p className="mt-1 text-sm text-dim">
-            아직 아무도 답하지 않은 이야기입니다. 첫 댓글이 큰 힘이 됩니다.
-          </p>
-          <div className="mt-3 space-y-3">
+          <FeedHeading
+            eyebrow="응답 대기"
+            title="답변 기다리는 글"
+            sub="아직 아무도 답하지 않은 이야기입니다. 첫 댓글이 큰 힘이 됩니다."
+          />
+          <div className="mt-4 space-y-3">
             {waiting.map((post) => (
               <PostCard key={post.id} post={post} meetup={meetupMap.get(post.id)} />
             ))}
@@ -288,8 +291,8 @@ export default async function CommunityHomePage() {
 
       {/* all boards */}
       <section>
-        <h2 className="text-lg font-bold text-foreground">모든 게시판</h2>
-        <div className="mt-3 grid gap-3 sm:grid-cols-2">
+        <FeedHeading eyebrow="게시판" title="모든 게시판" />
+        <div className="mt-4 grid gap-3 sm:grid-cols-2">
           {categories.map((category) => (
             <CategoryCard key={category.id} category={category} />
           ))}
