@@ -1,0 +1,21 @@
+{
+  "name": "@actone/shared",
+  "version": "0.1.0",
+  "private": true,
+  "type": "module",
+  "exports": {
+    ".": "./src/index.ts",
+    "./supabase/client": "./src/lib/supabase/client.ts",
+    "./supabase/server": "./src/lib/supabase/server.ts"
+  },
+  "dependencies": {
+    "@supabase/ssr": "^0.7.0",
+    "@supabase/supabase-js": "^2.49.4",
+    "clsx": "^2.1.1",
+    "tailwind-merge": "^3.0.2",
+    "zod": "^3.25.0"
+  },
+  "devDependencies": {
+    "typescript": "^5.8.0"
+  }
+}
