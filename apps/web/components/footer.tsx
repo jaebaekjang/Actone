@@ -36,8 +36,18 @@ export function Footer() {
           <SocialLinks />
         </div>
       </div>
-      <div className="border-t px-4 py-4 text-center text-xs text-muted">
-        © {new Date().getFullYear()} {company.name}. All rights reserved.
+      <div className="border-t">
+        <div className="mx-auto flex max-w-5xl flex-wrap items-center justify-between gap-3 px-4 py-5">
+          <p className="text-xs text-muted">
+            © {new Date().getFullYear()} {company.name}. All rights reserved.
+          </p>
+          <p
+            className="select-none text-xl font-extrabold tracking-[0.35em] text-foreground/25"
+            aria-hidden
+          >
+            ACT ONE
+          </p>
+        </div>
       </div>
     </footer>
   );

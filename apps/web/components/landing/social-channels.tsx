@@ -1,65 +1,55 @@
 "use client";
 
-import { ArrowUpRight } from "lucide-react";
+import { AtSign, Instagram, Youtube, type LucideIcon } from "lucide-react";
 import { siteConfig } from "@actone/shared";
 import { toast } from "@/components/ui/toast";
+import { SectionHeader } from "./section-header";
 
-const CHANNELS = [
-  {
-    key: "instagram" as const,
-    name: "인스타그램",
-    handle: "act_one_community",
-    desc: "대기실 밖에서 만나는 액트원의 순간들",
-  },
-  {
-    key: "threads" as const,
-    name: "스레드",
-    handle: "act_one_community",
-    desc: "배우들의 짧은 생각과 하루",
-  },
-  {
-    key: "youtube" as const,
-    name: "유튜브",
-    handle: "장재백_액트원 · @액트원",
-    desc: "배우들을 위한 이야기와 콘텐츠",
-  },
+const CHANNELS: {
+  key: "instagram" | "threads" | "youtube";
+  name: string;
+  handle: string;
+  icon: LucideIcon;
+}[] = [
+  { key: "instagram", name: "인스타그램", handle: "act_one_community", icon: Instagram },
+  { key: "threads", name: "스레드", handle: "act_one_community", icon: AtSign },
+  { key: "youtube", name: "유튜브", handle: "장재백_액트원 · @액트원", icon: Youtube },
 ];
 
 export function SocialChannels() {
   return (
     <section className="border-b bg-surface">
       <div className="mx-auto max-w-5xl px-4 py-16 md:py-20">
-        <p className="t-label">SNS 채널</p>
-        <h2 className="t-display mt-3 text-xl text-foreground md:text-2xl">
-          액트원은 밖에서도 이어집니다
-        </h2>
-        <p className="mt-2 text-sm text-muted">
-          커뮤니티 안의 이야기와 배우들을 위한 콘텐츠는 SNS에서도 이어집니다.
-        </p>
+        <SectionHeader
+          eyebrow="SNS 채널"
+          strong="액트원은 밖에서도 이어집니다"
+          sub="커뮤니티 안의 이야기와 배우들을 위한 콘텐츠는 SNS에서도 이어집니다."
+        />
 
-        <div className="mt-7 grid gap-3 sm:grid-cols-3">
+        <div className="mt-8 flex flex-col gap-3 sm:flex-row sm:flex-wrap">
           {CHANNELS.map((channel) => {
             const url = siteConfig.socialLinks[channel.key];
+            const Icon = channel.icon;
             const body = (
               <>
-                <div className="flex items-center justify-between gap-2">
-                  <span className="font-bold text-foreground">{channel.name}</span>
-                  <ArrowUpRight
-                    className="h-4 w-4 text-dim transition-colors group-hover:text-accent-soft"
-                    aria-hidden
-                  />
-                </div>
-                <p className="mt-0.5 font-mono text-xs text-accent-soft">{channel.handle}</p>
-                <p className="mt-2 text-sm leading-relaxed text-muted">{channel.desc}</p>
+                <span className="inline-flex h-11 w-11 shrink-0 items-center justify-center rounded-full bg-festival text-white transition-transform group-hover:scale-105 motion-reduce:group-hover:scale-100">
+                  <Icon className="h-5 w-5" aria-hidden />
+                </span>
+                <span className="text-left">
+                  <span className="block font-bold text-foreground">{channel.name}</span>
+                  <span className="block text-xs text-muted">{channel.handle}</span>
+                </span>
               </>
             );
+            const cls =
+              "group inline-flex items-center gap-3.5 rounded-full border bg-background py-2.5 pl-2.5 pr-6 transition-colors hover:border-festival/50";
             return url ? (
               <a
                 key={channel.key}
                 href={url}
                 target="_blank"
                 rel="noreferrer noopener"
-                className="pinned-note group rounded-lg border bg-background p-5"
+                className={cls}
               >
                 {body}
               </a>
@@ -68,7 +58,7 @@ export function SocialChannels() {
                 key={channel.key}
                 type="button"
                 onClick={() => toast("준비 중입니다")}
-                className="pinned-note group rounded-lg border bg-background p-5 text-left"
+                className={cls}
               >
                 {body}
               </button>

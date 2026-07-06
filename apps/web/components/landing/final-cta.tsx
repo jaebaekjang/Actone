@@ -2,7 +2,7 @@ import { KakaoLoginButton } from "@/components/kakao-login-button";
 
 export function FinalCta() {
   return (
-    <section className="stage-light">
+    <section className="festival-hero border-t">
       <div className="mx-auto max-w-3xl px-4 py-20 text-center md:py-28">
         <h2 className="t-display text-2xl text-foreground md:text-3xl">
           오늘도 혼자 버티고 있다면,

@@ -1,3 +1,5 @@
+import { SectionHeader } from "./section-header";
+
 const SHARE_ITEMS = [
   {
     title: "오디션 정보",
@@ -25,10 +27,10 @@ export function ShareCategories() {
   return (
     <section className="border-b bg-surface">
       <div className="mx-auto max-w-5xl px-4 py-16 md:py-20">
-        <p className="t-label">함께 나누는 것</p>
-        <h2 className="t-display mt-3 text-xl text-foreground md:text-2xl">
-          이곳에서 나눌 수 있는 것
-        </h2>
+        <SectionHeader
+          eyebrow="함께 나누는 것"
+          strong="이곳에서 나눌 수 있는 것"
+        />
 
         <div className="mt-7 grid gap-3 sm:grid-cols-2 lg:grid-cols-3">
           {SHARE_ITEMS.map((item) => (

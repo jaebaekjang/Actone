@@ -1,3 +1,5 @@
+import { SectionHeader } from "./section-header";
+
 const VOICES = [
   "나만 이렇게 헤매는 줄 알았던 사람",
   "오디션 결과보다 다음 시도가 더 어려운 사람",
@@ -9,10 +11,11 @@ export function WhoItIsFor() {
   return (
     <section className="border-b">
       <div className="mx-auto max-w-5xl px-4 py-16 md:py-20">
-        <p className="t-label">함께하는 사람들</p>
-        <h2 className="t-display mt-3 text-xl text-foreground md:text-2xl">
-          이런 분들을 위한 커뮤니티입니다
-        </h2>
+        <SectionHeader
+          eyebrow="함께하는 사람들"
+          strong="이런 분들을 위한 커뮤니티"
+          rest="입니다"
+        />
 
         <div className="mt-7 grid gap-3 md:grid-cols-2">
           {VOICES.map((voice) => (

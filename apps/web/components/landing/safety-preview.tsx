@@ -1,5 +1,4 @@
-import Link from "next/link";
-import { buttonStyles } from "@/components/ui/button";
+import { SectionHeader } from "./section-header";
 
 const RULES = [
   "실명 저격 금지",
@@ -14,14 +13,13 @@ export function SafetyPreview() {
   return (
     <section className="border-b">
       <div className="mx-auto max-w-5xl px-4 py-16 md:py-20">
-        <p className="t-label">이용 수칙</p>
-        <h2 className="t-display mt-3 text-xl text-foreground md:text-2xl">
-          안전한 대기실을 지키는 약속
-        </h2>
-        <p className="mt-2 max-w-lg text-sm leading-relaxed text-muted">
-          액트원은 배우들이 안심하고 이야기할 수 있는 공간을 지키기 위해 명확한
-          수칙을 둡니다.
-        </p>
+        <SectionHeader
+          eyebrow="이용 수칙"
+          strong="안전한 대기실을 지키는 약속"
+          sub="액트원은 배우들이 안심하고 이야기할 수 있는 공간을 지키기 위해 명확한 수칙을 둡니다."
+          href="/guidelines"
+          linkLabel="이용수칙 전체 보기"
+        />
 
         <ul className="mt-7 grid gap-2 sm:grid-cols-2 lg:grid-cols-3">
           {RULES.map((rule) => (
@@ -36,10 +34,6 @@ export function SafetyPreview() {
             </li>
           ))}
         </ul>
-
-        <Link href="/guidelines" className={buttonStyles("secondary", "md", "mt-7")}>
-          커뮤니티 이용수칙 전체 보기
-        </Link>
       </div>
     </section>
   );

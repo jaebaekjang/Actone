@@ -5,6 +5,7 @@ import { useState } from "react";
 import { KakaoLoginButton } from "@/components/kakao-login-button";
 import { buttonStyles } from "@/components/ui/button";
 import { cn } from "@actone/shared";
+import { SectionHeader } from "./section-header";
 
 interface Room {
   name: string;
@@ -55,13 +56,12 @@ export function FindMyRoom() {
   return (
     <section className="border-b">
       <div className="mx-auto max-w-5xl px-4 py-16 md:py-20">
-        <p className="t-label">방 안내</p>
-        <h2 className="t-display mt-3 text-xl text-foreground md:text-2xl">
-          지금 내 상황에 맞는 방 찾기
-        </h2>
-        <p className="mt-2 text-sm text-muted">
-          지금 가장 가까운 고민을 고르면 먼저 둘러볼 방을 추천해드릴게요.
-        </p>
+        <SectionHeader
+          eyebrow="방 안내"
+          strong="지금 내 상황에 맞는 방"
+          rest="을 찾아보세요"
+          sub="지금 가장 가까운 고민을 고르면 먼저 둘러볼 방을 추천해드릴게요."
+        />
 
         <div className="mt-7 flex flex-wrap gap-2">
           {CONCERNS.map((concern, index) => (

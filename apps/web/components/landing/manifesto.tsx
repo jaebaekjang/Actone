@@ -1,3 +1,5 @@
+import { SectionHeader } from "./section-header";
+
 const DECLARATIONS = [
   { stamp: "NO CASTING BROKERAGE", text: "캐스팅 중개나 소속사 매칭을 하지 않습니다." },
   { stamp: "NO ACTOR DATABASE", text: "배우 데이터베이스를 만들어 검색하게 하지 않습니다." },
@@ -9,13 +11,11 @@ export function ActOneManifesto() {
   return (
     <section className="border-b bg-surface">
       <div className="mx-auto max-w-5xl px-4 py-16 md:py-20">
-        <p className="t-label">무대 뒤 약속</p>
-        <h2 className="t-display mt-3 text-xl text-foreground md:text-2xl">
-          액트원이 하지 않는 것
-        </h2>
-        <p className="mt-2 max-w-lg text-sm leading-relaxed text-muted">
-          무대 뒤 벽에 붙여둔 약속입니다. 이 네 가지는 앞으로도 하지 않습니다.
-        </p>
+        <SectionHeader
+          eyebrow="무대 뒤 약속"
+          strong="액트원이 하지 않는 것"
+          sub="무대 뒤 벽에 붙여둔 약속입니다. 이 네 가지는 앞으로도 하지 않습니다."
+        />
 
         <div className="paper-card mt-7 rounded-xl p-1.5 md:p-2">
           <ul className="divide-y divide-dashed divide-[rgba(232,221,199,0.14)]">
