@@ -101,6 +101,11 @@ export const SORT_OPTIONS = [
 
 export type SortValue = (typeof SORT_OPTIONS)[number]["value"];
 
+// post image upload rules (spec §20)
+export const POST_IMAGE_MAX_COUNT = 5;
+export const IMAGE_MAX_SIZE = 5 * 1024 * 1024; // 5MB
+export const IMAGE_ALLOWED_TYPES = ["image/jpeg", "image/png", "image/webp"];
+
 export const FIELD_REVIEW_WARNING =
   "실명 저격, 확인되지 않은 폭로, 명예훼손 우려가 있는 표현은 관리자에 의해 숨김 처리될 수 있습니다. 경험 공유는 가능하지만, 개인 공격은 금지됩니다.";
 

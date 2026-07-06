@@ -3,13 +3,18 @@ import { LogOut, PenLine } from "lucide-react";
 import { getUserAndProfile } from "@/lib/data";
 import { signOut } from "@/lib/actions/auth";
 import { buttonStyles } from "./ui/button";
+import { HeaderFx } from "./header-fx";
 import { MemberLevelBadge } from "./member-level-badge";
 
 export async function Header() {
   const { user, profile } = await getUserAndProfile();
 
   return (
-    <header className="sticky top-0 z-50 border-b bg-background/90 backdrop-blur">
+    <header
+      id="site-header"
+      className="sticky top-0 z-50 border-b border-transparent bg-background/60 backdrop-blur transition-colors data-scrolled:border-line data-scrolled:bg-background/95"
+    >
+      <HeaderFx />
       <div className="mx-auto flex h-14 max-w-5xl items-center justify-between gap-4 px-4">
         <div className="flex items-center gap-6">
           <Link href={user ? "/community" : "/"} className="text-lg font-bold text-foreground">

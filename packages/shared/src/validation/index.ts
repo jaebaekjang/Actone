@@ -3,6 +3,7 @@ import {
   ACTIVITY_FIELD_OPTIONS,
   ACTOR_STATUS_OPTIONS,
   EXPECTATION_OPTIONS,
+  POST_IMAGE_MAX_COUNT,
   REPORT_REASONS,
 } from "../constants";
 
@@ -62,6 +63,11 @@ export const postSchema = z.object({
   title: z.string().trim().min(2, "제목은 2자 이상이어야 합니다.").max(100, "제목은 100자 이하여야 합니다."),
   content: z.string().trim().min(10, "내용은 10자 이상이어야 합니다.").max(20000),
   tags: z.array(z.string().trim().min(1).max(20)).max(5, "태그는 최대 5개까지 입력할 수 있습니다."),
+  image_urls: z
+    .array(z.string().url())
+    .max(POST_IMAGE_MAX_COUNT, `이미지는 최대 ${POST_IMAGE_MAX_COUNT}장까지 첨부할 수 있습니다.`)
+    .optional()
+    .default([]),
   meetup: meetupDetailsSchema.optional(),
 });
 

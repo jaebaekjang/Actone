@@ -1,6 +1,6 @@
 # ACTONE DB SCHEMA
 
-마이그레이션: `supabase/migrations/0001_schema.sql` (테이블/인덱스/트리거), `supabase/migrations/0002_rls.sql` (RLS/뷰/RPC), 시드: `supabase/seed.sql`.
+마이그레이션: `supabase/migrations/0001_schema.sql` (테이블/인덱스/트리거), `supabase/migrations/0002_rls.sql` (RLS/뷰/RPC), `supabase/migrations/0003_post_images.sql` (post_images 테이블/RLS/post-images 버킷), 시드: `supabase/seed.sql`.
 
 ## 테이블
 
@@ -53,8 +53,11 @@ application_url은 일반 select로 노출되지 않음 — ACTONE_RLS_NOTES.md 
 `id`, `key unique`, `value jsonb`, timestamps.
 키 `regular_member_rule` = `{"enabled":false,"minDaysAfterJoin":7,"minPostCount":1,"minCommentCount":3,"maxReceivedReports":0}` (시드에서 삽입, 기본 OFF).
 
-### post_images
-**미구현** (스펙상 선택). 필요 시 posts에 cascade FK + image_url + sort_order로 추가.
+### post_images (0003 마이그레이션)
+`id`, `post_id → posts (cascade)`, `image_url`, `sort_order int default 0`, `created_at`.
+글당 최대 5장 — `check_post_image_limit` BEFORE INSERT 트리거로 DB에서도 강제.
+인덱스: (post_id, sort_order). RLS: 부모 글이 읽히는 조건에서 SELECT, 글 작성자(미정지)만 INSERT, 작성자/관리자 DELETE.
+서버 액션은 본인 폴더(`post-images/{userId}/`) URL만 수용.
 
 ## 뷰
 
@@ -80,7 +83,8 @@ application_url은 일반 select로 노출되지 않음 — ACTONE_RLS_NOTES.md 
 
 ## Storage
 
-`avatars` 버킷(공개 읽기). 경로 `{userId}/...`에만 본인 업로드/수정/삭제 허용.
+- `avatars` 버킷(공개 읽기). 경로 `{userId}/...`에만 본인 업로드/수정/삭제 허용.
+- `post-images` 버킷(공개 읽기, 0003). 동일하게 `{userId}/...` 본인 폴더만 업로드/삭제 허용.
 
 ## 시드 데이터 (supabase/seed.sql)
 
@@ -90,4 +94,4 @@ application_url은 일반 select로 노출되지 않음 — ACTONE_RLS_NOTES.md 
 
 ## 마이그레이션 상태
 
-파일은 작성 완료. **실제 Supabase 프로젝트에는 아직 적용되지 않음** (이 리포에는 Supabase 자격 증명이 없음). SQL Editor 또는 supabase CLI로 0001 → 0002 → seed 순서로 적용할 것.
+파일은 작성 완료. **실제 Supabase 프로젝트에는 아직 적용되지 않음** (이 리포에는 Supabase 자격 증명이 없음). SQL Editor 또는 supabase CLI로 0001 → 0002 → 0003 → seed 순서로 적용할 것.

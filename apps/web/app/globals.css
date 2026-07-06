@@ -1,20 +1,29 @@
 @import "tailwindcss";
 
 @theme {
-  --font-sans: "Pretendard Variable", Pretendard, -apple-system, BlinkMacSystemFont,
-    system-ui, Roboto, "Apple SD Gothic Neo", "Noto Sans KR", "Malgun Gothic", sans-serif;
+  --font-sans: var(--font-noto-sans-kr), "Noto Sans KR", "Pretendard Variable",
+    Pretendard, -apple-system, BlinkMacSystemFont, system-ui,
+    "Apple SD Gothic Neo", "Malgun Gothic", sans-serif;
+  /* real English handles / stamp labels only — not for decoration */
+  --font-mono: ui-monospace, "SF Mono", "Cascadia Mono", "Roboto Mono", Consolas,
+    "Liberation Mono", monospace;
 
-  /* dark theater palette */
-  --color-background: #0f0f10;
-  --color-surface: #18181b;
-  --color-surface-soft: #232326;
-  --color-foreground: #f4f4f5;
-  --color-muted: #a1a1aa;
-  --color-accent: #f97316;
-  --color-accent-soft: #fdba74;
-  --color-line: #2f2f33;
+  /* deep theater palette — dark lobby, stage light, script paper */
+  --color-background: #0b0b0c;
+  --color-surface: #141416;
+  --color-surface-soft: #1c1c1f;
+  --color-foreground: #f4f1ea;
+  --color-muted: #a9a39a;
+  --color-dim: #736e67;
+  --color-accent: #d28a32;
+  --color-accent-soft: #e8b36a;
+  --color-paper: #e8ddc7;
+  --color-line: #29292d;
   --color-gold: #eab308;
   --color-kakao: #fee500;
+  /* festival crimson — hero curtain + section eyebrows (BIFF-style) */
+  --color-festival: #e0362c;
+  --color-festival-deep: #7a1218;
 }
 
 @layer base {
@@ -25,9 +34,103 @@
     background-color: var(--color-background);
     color: var(--color-foreground);
     font-family: var(--font-sans);
+    line-height: 1.7;
+    word-break: keep-all;
     -webkit-font-smoothing: antialiased;
   }
   * {
     border-color: var(--color-line);
+  }
+  h1,
+  h2,
+  h3 {
+    font-weight: 800;
+    letter-spacing: -0.02em;
+    line-height: 1.35;
+    text-wrap: balance;
+  }
+  :focus-visible {
+    outline: 2px solid var(--color-accent);
+    outline-offset: 2px;
+  }
+}
+
+@layer components {
+  /* small Korean section label — quiet, no fake-English decoration */
+  .t-label {
+    font-size: 0.8125rem;
+    font-weight: 700;
+    letter-spacing: 0.01em;
+    color: var(--color-accent);
+  }
+  .t-label-dim {
+    font-size: 0.8125rem;
+    font-weight: 700;
+    letter-spacing: 0.01em;
+    color: var(--color-dim);
+  }
+  /* theater poster display heading */
+  .t-display {
+    font-weight: 800;
+    letter-spacing: -0.025em;
+    line-height: 1.3;
+    text-wrap: balance;
+  }
+  /* a single dim stage spotlight — the only large gradient allowed on the site */
+  .stage-light {
+    background:
+      radial-gradient(60% 48% at 50% 0%, rgba(210, 138, 50, 0.13), transparent 70%),
+      var(--color-background);
+  }
+  /* festival curtain hero — layered deep-crimson waves fading into the lobby black */
+  .festival-hero {
+    background:
+      radial-gradient(90% 60% at 20% -10%, rgba(224, 54, 44, 0.32), transparent 62%),
+      radial-gradient(80% 55% at 82% -6%, rgba(142, 22, 26, 0.5), transparent 64%),
+      radial-gradient(140% 90% at 50% -30%, #7a1218 0%, #4a0d12 44%, transparent 78%),
+      var(--color-background);
+  }
+  /* note pinned to the wall: lifts and catches light on hover */
+  .pinned-note {
+    transition: transform 0.2s ease, border-color 0.2s ease, box-shadow 0.2s ease;
+  }
+  .pinned-note:hover {
+    transform: translateY(-2px);
+    border-color: rgba(210, 138, 50, 0.35);
+    box-shadow: 0 10px 28px rgba(0, 0, 0, 0.45), 0 0 0 1px rgba(210, 138, 50, 0.08);
+  }
+  /* call sheet paper card */
+  .paper-card {
+    background: linear-gradient(180deg, rgba(232, 221, 199, 0.05), rgba(232, 221, 199, 0.015));
+    border: 1px solid rgba(232, 221, 199, 0.14);
+  }
+}
+
+/* slow drift for the waiting-room preview notes in the hero */
+@keyframes drift {
+  0%,
+  100% {
+    transform: translateY(0);
+  }
+  50% {
+    transform: translateY(-6px);
+  }
+}
+.drift {
+  animation: drift 7s ease-in-out infinite;
+}
+.drift-delayed {
+  animation: drift 7s ease-in-out 2.3s infinite;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .pinned-note,
+  .pinned-note:hover {
+    transition: none;
+    transform: none;
+  }
+  .drift,
+  .drift-delayed {
+    animation: none;
   }
 }

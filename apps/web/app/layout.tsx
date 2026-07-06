@@ -1,7 +1,16 @@
 import type { Metadata } from "next";
+import { Noto_Sans_KR } from "next/font/google";
 import { siteConfig } from "@actone/shared";
 import { Toaster } from "@/components/ui/toast";
 import "./globals.css";
+
+// self-hosted via next/font — no runtime CDN dependency
+const notoSansKr = Noto_Sans_KR({
+  subsets: ["latin"],
+  weight: ["400", "500", "700", "800"],
+  display: "swap",
+  variable: "--font-noto-sans-kr",
+});
 
 export const metadata: Metadata = {
   title: {
@@ -15,13 +24,7 @@ export default function RootLayout({
   children,
 }: Readonly<{ children: React.ReactNode }>) {
   return (
-    <html lang="ko">
-      <head>
-        <link
-          rel="stylesheet"
-          href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/variable/pretendardvariable-dynamic-subset.min.css"
-        />
-      </head>
+    <html lang="ko" className={notoSansKr.variable}>
       <body className="min-h-screen antialiased">
         {children}
         <Toaster />

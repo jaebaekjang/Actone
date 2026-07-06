@@ -97,6 +97,14 @@ export interface OfflineMeetupDetails extends Omit<MeetupPublicDetails, "has_app
   updated_at: string;
 }
 
+export interface PostImage {
+  id: string;
+  post_id: string;
+  image_url: string;
+  sort_order: number;
+  created_at: string;
+}
+
 export interface Comment {
   id: string;
   post_id: string;

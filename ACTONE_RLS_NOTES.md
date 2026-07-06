@@ -1,6 +1,6 @@
 # ACTONE RLS NOTES
 
-RLS 정의: `supabase/migrations/0002_rls.sql`. 모든 테이블에 RLS 활성화됨.
+RLS 정의: `supabase/migrations/0002_rls.sql` (+ post_images는 `0003_post_images.sql`). 모든 테이블에 RLS 활성화됨.
 
 ## 보안 모델 요약
 
@@ -38,7 +38,9 @@ RLS 정의: `supabase/migrations/0002_rls.sql`. 모든 테이블에 RLS 활성�
 | resource_submissions | 제출자 본인 / 관리자 | 본인 + 미정지 + status=pending | 관리자만 | - |
 | member_level_logs | 본인 이력 / 관리자 | 관리자 (자동 승급은 definer 함수가 owner 권한으로 insert) | - | - |
 | app_settings | 관리자만 | 관리자만 | 관리자만 | 관리자만 |
+| post_images (0003) | 부모 글이 읽히는 조건(published/자기 글/관리자) | 글 작성자 본인 + 미정지 (글당 5장 트리거 제한) | - | 글 작성자 / 관리자 |
 | storage.objects (avatars) | 인증 사용자 읽기(버킷은 public) | 본인 폴더(`{uid}/...`)만 | 본인 폴더 | 본인 폴더 |
+| storage.objects (post-images, 0003) | 인증 사용자 읽기(버킷은 public) | 본인 폴더(`{uid}/...`)만 | - | 본인 폴더 |
 
 ## 트리거 우회 메커니즘 (알아둘 것)
 

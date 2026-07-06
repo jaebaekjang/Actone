@@ -6,12 +6,13 @@
 
 이 리포에는 Supabase 자격 증명이 없어 코드/SQL은 실제 인스턴스에서 한 번도 실행되지 않았다.
 
-1. Supabase 프로젝트 생성 → SQL Editor에서 `0001_schema.sql` → `0002_rls.sql` → `seed.sql` 순서로 실행. 에러가 나면 해당 구문 수정(특히 storage 정책은 프로젝트 설정에 따라 권한 이슈 가능).
+1. Supabase 프로젝트 생성 → SQL Editor에서 `0001_schema.sql` → `0002_rls.sql` → `0003_post_images.sql` → `seed.sql` 순서로 실행. 에러가 나면 해당 구문 수정(특히 storage 정책은 프로젝트 설정에 따라 권한 이슈 가능).
 2. 카카오 OAuth 연결 (README 절차).
 3. `.env.local` 생성 후 `npm run dev:web`으로 수동 검증:
    - [ ] 카카오 로그인 → `/onboarding` → 저장 → `/community` 리다이렉트
    - [ ] profiles 행 자동 생성, member_level='new_member'
    - [ ] 글 작성/수정/삭제, 댓글, 좋아요/북마크 토글, 신고 접수
+   - [ ] 게시글 이미지 첨부(write/edit, 최대 5장) → 상세 페이지 표시, post-images 버킷 업로드 확인
    - [ ] 카운터(like/comment/bookmark/view) 갱신 확인
    - [ ] 신규회원으로 모임 글에서 신청 링크 숨김 + 안내 문구
    - [ ] SQL로 정회원 승급 후 링크 표시 확인
@@ -32,8 +33,8 @@
 
 ## 3. 남은 기능 (스펙 내, 선택)
 
-- 게시글 이미지 업로드: post_images 테이블(스펙 §20) + write 폼 업로드(최대 5장, jpg/png/webp, 5MB) + storage 버킷/정책.
-- 카테고리 보드/검색 결과에서도 오프라인 모임 카드에 meetup 정보 표시(현재 홈/보드는 표시, 검색 결과는 미표시).
+- 없음. 게시글 이미지 업로드(post_images)와 검색 결과 meetup 정보 표시는 2026-07-06 구현 완료.
+- 참고: 이미지 삭제/글 삭제 시 storage 원본 파일은 남음(orphan). 필요하면 정리 배치 추가(스펙 외).
 
 ## 4. UI 개선 아이디어 (낮은 우선순위)
 
@@ -46,14 +47,14 @@
 - Supabase Auth Redirect URL에 프로덕션 콜백 2개 등록 확인.
 - siteConfig.socialLinks 실제 URL 채우기 (현재 빈 문자열 → "준비 중입니다").
 
-## 이미 실행된 명령 (2026-07-06, 이 리포에서)
+## 이미 실행된 명령 (2026-07-06, post_images 구현 이후 재실행)
 
 ```bash
 npm install                          # 성공
-npm run build --workspace apps/web   # 성공 (16 routes)
-npm run build --workspace apps/admin # 성공 (20 routes)
 npm run lint                         # 성공 (에러/경고 0)
 npm run build                        # 성공 (양쪽 모두)
+npm run build --workspace apps/web   # 성공 (16 routes)
+npm run build --workspace apps/admin # 성공 (20 routes)
 ```
 
 빌드 에러 없음. 알려진 lint 경고 없음.

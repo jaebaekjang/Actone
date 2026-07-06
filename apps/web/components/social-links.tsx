@@ -16,6 +16,15 @@ export function SocialLinks() {
     <div className="flex flex-wrap gap-x-4 gap-y-2 text-sm md:justify-end">
       {(Object.keys(LABELS) as SocialLinkKey[]).map((key) => {
         const url = siteConfig.socialLinks[key];
+        const handle = siteConfig.socialHandles[key];
+        const label = handle ? (
+          <>
+            {LABELS[key]}
+            <span className="ml-1 font-mono text-xs text-dim">{handle}</span>
+          </>
+        ) : (
+          LABELS[key]
+        );
         if (!url) {
           return (
             <button
@@ -24,7 +33,7 @@ export function SocialLinks() {
               onClick={() => toast("준비 중입니다")}
               className="text-muted/60 hover:text-muted"
             >
-              {LABELS[key]}
+              {label}
             </button>
           );
         }
@@ -36,7 +45,7 @@ export function SocialLinks() {
             rel="noreferrer noopener"
             className="text-muted hover:text-foreground"
           >
-            {LABELS[key]}
+            {label}
           </a>
         );
       })}

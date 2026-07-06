@@ -27,7 +27,7 @@ export function PostCard({
   return (
     <Link
       href={`/posts/${post.id}`}
-      className="block rounded-xl border bg-surface p-4 transition-colors hover:border-accent/40"
+      className="pinned-note block rounded-xl border bg-surface p-4"
     >
       <div className="flex flex-wrap items-center gap-2 text-xs text-muted">
         {post.is_pinned ? (

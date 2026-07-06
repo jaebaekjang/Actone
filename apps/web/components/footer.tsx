@@ -12,12 +12,15 @@ export function Footer() {
           <p className="max-w-xs text-sm leading-relaxed text-muted">
             인맥 없이 배우를 시작했다면, 혼자 버티지 않아도 됩니다.
           </p>
-          <nav className="flex gap-4 pt-2 text-sm text-muted">
+          <nav className="flex flex-wrap gap-4 pt-2 text-sm text-muted">
             <Link href="/about" className="hover:text-foreground">
               소개
             </Link>
+            <Link href="/community" className="hover:text-foreground">
+              커뮤니티
+            </Link>
             <Link href="/guidelines" className="hover:text-foreground">
-              커뮤니티 이용수칙
+              이용수칙
             </Link>
           </nav>
         </div>
@@ -33,8 +36,18 @@ export function Footer() {
           <SocialLinks />
         </div>
       </div>
-      <div className="border-t px-4 py-4 text-center text-xs text-muted">
-        © {new Date().getFullYear()} {company.name}. All rights reserved.
+      <div className="border-t">
+        <div className="mx-auto flex max-w-5xl flex-wrap items-center justify-between gap-3 px-4 py-5">
+          <p className="text-xs text-muted">
+            © {new Date().getFullYear()} {company.name}. All rights reserved.
+          </p>
+          <p
+            className="select-none text-xl font-extrabold tracking-[0.35em] text-foreground/25"
+            aria-hidden
+          >
+            ACT ONE
+          </p>
+        </div>
       </div>
     </footer>
   );
