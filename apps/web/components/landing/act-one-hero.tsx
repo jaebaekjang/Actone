@@ -35,12 +35,10 @@ export function ActOneHero() {
           />
           <Link
             href="#waiting-room"
-            className="group inline-flex h-12 w-full items-center justify-center gap-2.5 rounded-full border border-foreground/30 pl-6 pr-2 text-base font-semibold text-foreground transition-colors hover:border-foreground/70 sm:w-auto"
+            className="microphone-button group inline-flex h-12 w-full items-center justify-center gap-2.5 rounded-full border border-foreground/30 bg-foreground/8 px-6 text-base font-semibold text-foreground transition-colors hover:border-accent/50 hover:bg-foreground/12 sm:w-auto"
           >
-            커뮤니티 먼저 둘러보기
-            <span className="inline-flex h-8 w-8 items-center justify-center rounded-full bg-foreground/10 transition-colors group-hover:bg-festival">
-              <ArrowRight className="h-4 w-4" aria-hidden />
-            </span>
+            <ArrowRight className="h-5 w-5 -scale-x-100" aria-hidden />
+            커뮤니티 미리 보기
           </Link>
         </div>
 

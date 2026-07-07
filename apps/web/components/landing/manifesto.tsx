@@ -17,8 +17,8 @@ export function ActOneManifesto() {
           sub="무대 뒤 벽에 붙여둔 약속입니다. 이 네 가지는 앞으로도 하지 않습니다."
         />
 
-        <div className="paper-card mt-7 rounded-xl p-1.5 md:p-2">
-          <ul className="divide-y divide-dashed divide-[rgba(232,221,199,0.14)]">
+        <div className="ticket-card mt-7 rounded-xl p-1.5 md:p-2" style={{ "--notch-bg": "var(--color-surface)" } as React.CSSProperties}>
+          <ul className="divide-y divide-dashed divide-[rgba(232,221,199,0.22)]">
             {DECLARATIONS.map((declaration, index) => (
               <li
                 key={declaration.stamp}

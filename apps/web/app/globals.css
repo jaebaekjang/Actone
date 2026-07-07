@@ -104,38 +104,40 @@
     background: linear-gradient(180deg, rgba(232, 221, 199, 0.05), rgba(232, 221, 199, 0.015));
     border: 1px solid rgba(232, 221, 199, 0.14);
   }
-  /* stage spotlights: warm ivory beams from the top corners aimed at center stage */
+  /* stage spotlights: bold warm beams from the top corners — the opening moment */
   .stage-spotlight-left,
   .stage-spotlight-right {
     position: absolute;
-    top: -5rem;
-    width: clamp(14rem, 38vw, 30rem);
-    height: clamp(24rem, 72vh, 44rem);
+    top: -8rem;
+    width: clamp(16rem, 42vw, 36rem);
+    height: clamp(28rem, 85vh, 56rem);
     background: linear-gradient(
-      to bottom,
-      rgba(248, 241, 220, 0.3) 0%,
-      rgba(232, 179, 106, 0.1) 52%,
-      transparent 100%
+      135deg,
+      rgba(255, 248, 220, 0.48) 0%,
+      rgba(248, 210, 140, 0.28) 28%,
+      rgba(232, 179, 106, 0.12) 52%,
+      transparent 85%
     );
-    clip-path: polygon(44% 0, 56% 0, 100% 100%, 0% 100%);
-    filter: blur(22px);
-    opacity: 0.8;
+    clip-path: polygon(38% 0, 62% 0, 100% 100%, 0% 100%);
+    filter: blur(12px);
+    opacity: 1;
     pointer-events: none;
   }
   .stage-spotlight-left {
-    left: -3rem;
-    transform: rotate(-17deg);
+    left: -8rem;
+    transform: rotate(-22deg);
     transform-origin: top center;
   }
   .stage-spotlight-right {
-    right: -3rem;
-    transform: rotate(17deg);
+    right: -8rem;
+    transform: rotate(22deg);
     transform-origin: top center;
   }
   @media (max-width: 640px) {
     .stage-spotlight-left,
     .stage-spotlight-right {
-      opacity: 0.45;
+      opacity: 0.65;
+      filter: blur(16px);
     }
   }
   /* curtain valance: crimson scallops hanging along the top of the curtain-call band */
@@ -171,19 +173,26 @@
    Unlayered on purpose: they must win over layered utilities (rounded-lg,
    active:translate-y-px) and over the [data-reveal] transition above. */
 
-/* ticket-shaped card/row: paper tint, punched side notches, dashed perforation.
+/* ticket-shaped card/row: big punched side notches, strong dashed perforation.
    Set --notch-bg to the section's background so the notch reads as a hole. */
 .ticket-card,
 .ticket-row {
   --notch-bg: var(--color-background);
   position: relative;
-  overflow: hidden;
-  border: 1px solid rgba(232, 221, 199, 0.16);
-  border-radius: 0.875rem;
-  background: linear-gradient(180deg, rgba(232, 221, 199, 0.07), rgba(232, 221, 199, 0.02));
-  transition: opacity 0.7s ease, transform 0.3s ease, box-shadow 0.3s ease,
-    border-color 0.3s ease;
+  overflow: visible;
+  border: 1.5px solid rgba(232, 221, 199, 0.24);
+  border-radius: 1rem;
+  background: linear-gradient(
+    135deg,
+    rgba(255, 248, 220, 0.1),
+    rgba(232, 221, 199, 0.04)
+  );
+  backdrop-filter: blur(0.5px);
+  transition: opacity 0.7s ease, transform 0.25s cubic-bezier(0.34, 1.56, 0.64, 1),
+    box-shadow 0.25s ease, border-color 0.25s ease;
+  box-shadow: 0 1px 2px rgba(0, 0, 0, 0.3);
 }
+/* bold circular notches punched through the ticket edges */
 .ticket-card::before,
 .ticket-card::after,
 .ticket-row::before,
@@ -191,68 +200,69 @@
   content: "";
   position: absolute;
   top: 50%;
-  width: 1.15rem;
-  height: 1.15rem;
-  border: 1px solid rgba(232, 221, 199, 0.2);
+  width: 2rem;
+  height: 2rem;
   border-radius: 9999px;
   background: var(--notch-bg);
+  border: 1.5px solid rgba(232, 221, 199, 0.18);
   transform: translateY(-50%);
   pointer-events: none;
+  box-shadow: inset 0 0 3px rgba(0, 0, 0, 0.5);
 }
 .ticket-card::before,
 .ticket-row::before {
-  left: -0.65rem;
+  left: -1.05rem;
 }
 .ticket-card::after,
 .ticket-row::after {
-  right: -0.65rem;
+  right: -1.05rem;
 }
 @media (hover: hover) {
   .ticket-card:hover,
   .ticket-row:hover {
-    transform: translateY(-3px);
-    border-color: rgba(210, 138, 50, 0.4);
-    box-shadow: 0 14px 30px rgba(0, 0, 0, 0.4), 0 2px 10px rgba(210, 138, 50, 0.12);
+    transform: translateY(-5px);
+    border-color: rgba(232, 179, 106, 0.55);
+    box-shadow: 0 20px 40px rgba(0, 0, 0, 0.5), 0 8px 16px rgba(232, 179, 106, 0.15);
   }
 }
 
-/* microphone CTA: capsule grip, warm stage-light glow, sound-wave pulse on hover */
+/* microphone CTA: capsule with warm stage-light glow + animated pulse ring */
 .microphone-button {
   position: relative;
   min-height: 52px;
   border-radius: 9999px;
-  transition: transform 0.2s ease, box-shadow 0.25s ease, background-color 0.2s ease,
-    filter 0.2s ease;
+  transition: transform 0.18s cubic-bezier(0.34, 1.56, 0.64, 1),
+    box-shadow 0.22s ease, background-color 0.18s ease;
 }
 .microphone-button::after {
   content: "";
   position: absolute;
-  inset: -4px;
-  border: 1.5px solid rgba(232, 179, 106, 0.55);
+  inset: -6px;
+  border: 2px solid rgba(232, 179, 106, 0.7);
   border-radius: 9999px;
   opacity: 0;
   pointer-events: none;
 }
 .microphone-button:hover {
-  transform: scale(1.03);
-  box-shadow: 0 0 0 1px rgba(232, 179, 106, 0.35), 0 6px 26px rgba(234, 179, 8, 0.28),
-    0 10px 24px rgba(0, 0, 0, 0.35);
+  transform: scale(1.06);
+  box-shadow: 0 0 0 2px rgba(232, 179, 106, 0.25), 0 12px 32px rgba(234, 179, 8, 0.35),
+    0 4px 12px rgba(232, 179, 106, 0.2), inset 0 0 20px rgba(255, 255, 255, 0.05);
 }
 .microphone-button:hover::after {
-  animation: mic-pulse 1.5s ease-out infinite;
+  animation: mic-pulse 1.8s ease-out infinite;
 }
 .microphone-button:active {
-  transform: scale(0.98);
+  transform: scale(0.96);
 }
 @keyframes mic-pulse {
   0% {
-    opacity: 0.7;
+    opacity: 0.8;
     transform: scale(1);
   }
-  75%,
+  70%,
   100% {
     opacity: 0;
-    transform: scale(1.14);
+    transform: scale(1.2);
   }
 }
 

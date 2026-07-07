@@ -58,7 +58,8 @@ export function WaitingRoomPreview() {
             <Link
               key={post.title}
               href="/login"
-              className={`group relative flex aspect-[3/4] w-56 shrink-0 snap-start flex-col justify-between overflow-hidden rounded-xl border bg-gradient-to-b ${post.tint} to-background p-4 transition-transform hover:-translate-y-1 motion-reduce:hover:translate-y-0 md:w-60`}
+              className={`ticket-card group relative flex aspect-[3/4] w-56 shrink-0 snap-start flex-col justify-between overflow-hidden rounded-xl bg-gradient-to-b ${post.tint} to-background p-4 motion-reduce:hover:translate-y-0 md:w-60`}
+              style={{ "--notch-bg": "var(--color-background)" } as React.CSSProperties}
             >
               <div className="flex items-center justify-between gap-2">
                 <span className="text-xs font-bold text-foreground/90">{post.category}</span>

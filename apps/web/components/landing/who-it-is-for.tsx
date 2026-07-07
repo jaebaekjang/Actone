@@ -21,7 +21,7 @@ export function WhoItIsFor() {
           {VOICES.map((voice) => (
             <figure
               key={voice}
-              className="pinned-note rounded-lg border-l-2 border-l-accent/60 bg-surface p-5"
+              className="ticket-card pinned-note rounded-lg border-l-2 border-l-accent/60 bg-surface p-5"
             >
               <blockquote className="leading-relaxed text-foreground">
                 &ldquo;{voice}&rdquo;

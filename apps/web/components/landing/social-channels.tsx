@@ -42,7 +42,7 @@ export function SocialChannels() {
               </>
             );
             const cls =
-              "group inline-flex items-center gap-3.5 rounded-full border bg-background py-2.5 pl-2.5 pr-6 transition-colors hover:border-festival/50";
+              "ticket-card group inline-flex items-center gap-3.5 rounded-full border bg-background py-2.5 pl-2.5 pr-6";
             return url ? (
               <a
                 key={channel.key}
