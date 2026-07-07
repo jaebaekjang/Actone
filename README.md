@@ -47,9 +47,11 @@ NEXT_PUBLIC_ADMIN_SITE_URL=https://admin.actone.kr
 2. SQL Editor에서 순서대로 실행:
    - `supabase/migrations/0001_schema.sql`
    - `supabase/migrations/0002_rls.sql`
+   - `supabase/migrations/0003_post_images.sql`
    - `supabase/seed.sql`
    (또는 Supabase CLI: `supabase db push` 후 `supabase db seed`)
-3. Storage에 `avatars` 버킷은 0002 마이그레이션이 생성합니다(공개 읽기).
+3. Storage의 `avatars`, `post-images` 버킷은 마이그레이션이 생성합니다(공개 읽기).
+4. (선택) 실제 프로젝트 없이 로컬 PostgreSQL로 마이그레이션/RLS를 검증하려면 `supabase/tests/README.md` 참고.
 
 ## 카카오 OAuth 설정
 
@@ -118,10 +120,10 @@ values ('<user-uuid>', '<email-or-null>', true);
 
 ## 알려진 한계
 
-- 게시글 이미지 업로드(post_images)는 미구현(스키마 상 선택 항목). 아바타 업로드는 구현됨.
 - 댓글 대댓글 없음(MVP 스펙).
 - 페이지네이션은 단순 페이지 번호 방식(카테고리 보드), 검색은 ilike 기반.
-- 실제 Supabase 프로젝트에 대해 E2E 검증은 하지 않음(마이그레이션은 코드 리뷰 수준으로 검증). `ACTONE_TODO_NEXT_MODEL.md` 참고.
+- 글 수정에서 제거한 이미지는 DB 참조만 삭제되고 Storage 파일은 남음.
+- 마이그레이션/RLS는 로컬 PostgreSQL 16에서 검증됨(`supabase/tests/`, 26건 PASS). 실제 Supabase 프로젝트(카카오 OAuth, Storage)에 대한 E2E 검증은 미실시 — `ACTONE_TODO_NEXT_MODEL.md` 참고.
 
 ## 핸드오프 문서
 

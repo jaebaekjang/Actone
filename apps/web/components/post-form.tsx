@@ -1,20 +1,27 @@
 "use client";
 
-import { useState, useTransition } from "react";
+import Image from "next/image";
+import { useRef, useState, useTransition } from "react";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
+import { X } from "lucide-react";
 import { z } from "zod";
 import {
+  ALLOWED_IMAGE_TYPES,
   CATEGORY_SLUGS,
   FIELD_REVIEW_WARNING,
+  MAX_IMAGE_SIZE_BYTES,
+  MAX_POST_IMAGES,
   parseTags,
   type Category,
   type OfflineMeetupDetails,
 } from "@actone/shared";
+import { createSupabaseBrowserClient } from "@actone/shared/supabase/client";
 import type { ActionState } from "@/lib/actions/auth";
 import { WarningBox } from "./warning-box";
 import { Button } from "./ui/button";
 import { FieldError, Input, Label, Select, Textarea } from "./ui/input";
+import { toast } from "./ui/toast";
 
 const formSchema = z.object({
   category_id: z.string().uuid("카테고리를 선택해주세요."),
@@ -52,17 +59,63 @@ export function PostForm({
   categories,
   action,
   mode,
+  userId,
   defaultValues,
   meetupDefaults,
+  imageDefaults,
 }: {
   categories: Pick<Category, "id" | "name" | "slug">[];
   action: (prev: ActionState, formData: FormData) => Promise<ActionState>;
   mode: "create" | "edit";
+  userId: string;
   defaultValues?: Partial<Pick<FormValues, "category_id" | "title" | "content" | "tags">>;
   meetupDefaults?: Partial<OfflineMeetupDetails> | null;
+  imageDefaults?: string[];
 }) {
   const [pending, startTransition] = useTransition();
   const [serverError, setServerError] = useState<string>();
+  const [images, setImages] = useState<string[]>(imageDefaults ?? []);
+  const [uploading, setUploading] = useState(false);
+  const fileRef = useRef<HTMLInputElement>(null);
+
+  const handleImageFiles = async (files: FileList | null) => {
+    if (!files || files.length === 0) return;
+    const remaining = MAX_POST_IMAGES - images.length;
+    if (remaining <= 0) {
+      toast(`이미지는 최대 ${MAX_POST_IMAGES}장까지 첨부할 수 있습니다.`);
+      return;
+    }
+    const selected = Array.from(files).slice(0, remaining);
+    setUploading(true);
+    try {
+      const supabase = createSupabaseBrowserClient();
+      const uploaded: string[] = [];
+      for (const file of selected) {
+        if (!ALLOWED_IMAGE_TYPES.includes(file.type)) {
+          toast("jpg, png, webp 형식만 업로드할 수 있습니다.");
+          continue;
+        }
+        if (file.size > MAX_IMAGE_SIZE_BYTES) {
+          toast("이미지는 5MB 이하여야 합니다.");
+          continue;
+        }
+        const ext = file.name.split(".").pop() ?? "jpg";
+        const path = `${userId}/${Date.now()}-${Math.random().toString(36).slice(2, 8)}.${ext}`;
+        const { error } = await supabase.storage.from("post-images").upload(path, file, {
+          cacheControl: "3600",
+        });
+        if (error) {
+          toast("이미지 업로드에 실패했습니다.");
+          continue;
+        }
+        uploaded.push(supabase.storage.from("post-images").getPublicUrl(path).data.publicUrl);
+      }
+      if (uploaded.length > 0) setImages((prev) => [...prev, ...uploaded]);
+    } finally {
+      setUploading(false);
+      if (fileRef.current) fileRef.current.value = "";
+    }
+  };
 
   const form = useForm<FormValues>({
     resolver: zodResolver(formSchema),
@@ -93,6 +146,7 @@ export function PostForm({
     fd.set("title", values.title);
     fd.set("content", values.content);
     fd.set("tags", values.tags ?? "");
+    images.slice(0, MAX_POST_IMAGES).forEach((url) => fd.append("image_urls", url));
     if (isMeetup) {
       fd.set("meetup_region", values.meetup_region ?? "");
       fd.set("meetup_date", values.meetup_date ?? "");
@@ -167,6 +221,43 @@ export function PostForm({
         <FieldError message={form.formState.errors.tags?.message} />
       </div>
 
+      <div>
+        <Label>이미지 (선택, 최대 {MAX_POST_IMAGES}장 · jpg/png/webp · 5MB 이하)</Label>
+        {images.length > 0 ? (
+          <div className="mb-2 flex flex-wrap gap-2">
+            {images.map((url) => (
+              <div key={url} className="relative h-20 w-20 overflow-hidden rounded-lg border">
+                <Image src={url} alt="" fill sizes="80px" className="object-cover" />
+                <button
+                  type="button"
+                  onClick={() => setImages((prev) => prev.filter((u) => u !== url))}
+                  className="absolute right-1 top-1 rounded-full bg-black/70 p-0.5 text-white hover:bg-black"
+                  aria-label="이미지 삭제"
+                >
+                  <X className="h-3.5 w-3.5" aria-hidden />
+                </button>
+              </div>
+            ))}
+          </div>
+        ) : null}
+        <input
+          ref={fileRef}
+          type="file"
+          accept="image/jpeg,image/png,image/webp"
+          multiple
+          className="hidden"
+          onChange={(e) => handleImageFiles(e.target.files)}
+        />
+        <Button
+          variant="secondary"
+          size="sm"
+          onClick={() => fileRef.current?.click()}
+          disabled={uploading || images.length >= MAX_POST_IMAGES}
+        >
+          {uploading ? "업로드 중…" : "이미지 추가"}
+        </Button>
+      </div>
+
       {isMeetup ? (
         <fieldset className="space-y-4 rounded-xl border bg-surface p-4">
           <legend className="px-1 text-sm font-semibold text-foreground">
@@ -224,7 +315,7 @@ export function PostForm({
       {serverError ? <p className="text-sm text-red-400">{serverError}</p> : null}
 
       <div className="flex justify-end gap-2">
-        <Button type="submit" size="lg" disabled={pending}>
+        <Button type="submit" size="lg" disabled={pending || uploading}>
           {pending ? "저장 중…" : mode === "create" ? "등록하기" : "수정하기"}
         </Button>
       </div>

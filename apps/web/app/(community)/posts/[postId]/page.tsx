@@ -1,3 +1,4 @@
+import Image from "next/image";
 import Link from "next/link";
 import { notFound } from "next/navigation";
 import { CalendarDays, Clock, ExternalLink, MapPin, Pencil, Users, Wallet } from "lucide-react";
@@ -10,6 +11,7 @@ import {
   type Comment,
   type MeetupPublicDetails,
   type Post,
+  type PostImage,
 } from "@actone/shared";
 import { CommentForm } from "@/components/comment-form";
 import { DeleteCommentButton, DeletePostButton } from "@/components/delete-buttons";
@@ -67,7 +69,7 @@ export default async function PostDetailPage({
     }
   }
 
-  const [commentsRes, likeRes, bookmarkRes] = await Promise.all([
+  const [commentsRes, likeRes, bookmarkRes, imagesRes] = await Promise.all([
     supabase
       .from("comments")
       .select("*")
@@ -90,7 +92,14 @@ export default async function PostDetailPage({
           .eq("user_id", user.id)
           .maybeSingle()
       : Promise.resolve({ data: null }),
+    supabase
+      .from("post_images")
+      .select("*")
+      .eq("post_id", postId)
+      .order("sort_order"),
   ]);
+
+  const images = (imagesRes.data as PostImage[] | null) ?? [];
 
   const comments = await attachCommentAuthors((commentsRes.data as Comment[] | null) ?? []);
 
@@ -221,6 +230,26 @@ export default async function PostDetailPage({
       <div className="mt-6 whitespace-pre-wrap leading-relaxed text-foreground">
         {post.content}
       </div>
+
+      {images.length > 0 ? (
+        <div className="mt-6 space-y-3">
+          {images.map((image) => (
+            <div
+              key={image.id}
+              className="relative w-full overflow-hidden rounded-xl border"
+            >
+              <Image
+                src={image.image_url}
+                alt=""
+                width={1200}
+                height={800}
+                sizes="(max-width: 768px) 100vw, 768px"
+                className="h-auto w-full object-contain"
+              />
+            </div>
+          ))}
+        </div>
+      ) : null}
 
       {post.tags.length > 0 ? (
         <div className="mt-5 flex flex-wrap gap-2">

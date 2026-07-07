@@ -1,6 +1,7 @@
 # ACTONE DB SCHEMA
 
-마이그레이션: `supabase/migrations/0001_schema.sql` (테이블/인덱스/트리거), `supabase/migrations/0002_rls.sql` (RLS/뷰/RPC), 시드: `supabase/seed.sql`.
+마이그레이션: `supabase/migrations/0001_schema.sql` (테이블/인덱스/트리거), `0002_rls.sql` (RLS/뷰/RPC), `0003_post_images.sql` (게시글 이미지), 시드: `supabase/seed.sql`.
+로컬 검증 하네스: `supabase/tests/` (PostgreSQL 16에서 전체 실행 + RLS 테스트 26건 PASS, 2026-07-07).
 
 ## 테이블
 
@@ -53,8 +54,11 @@ application_url은 일반 select로 노출되지 않음 — ACTONE_RLS_NOTES.md 
 `id`, `key unique`, `value jsonb`, timestamps.
 키 `regular_member_rule` = `{"enabled":false,"minDaysAfterJoin":7,"minPostCount":1,"minCommentCount":3,"maxReceivedReports":0}` (시드에서 삽입, 기본 OFF).
 
-### post_images
-**미구현** (스펙상 선택). 필요 시 posts에 cascade FK + image_url + sort_order로 추가.
+### post_images (0003)
+`id`, `post_id → posts (cascade)`, `image_url`, `sort_order`, `created_at`.
+글당 최대 5장 — `enforce_post_image_limit` BEFORE INSERT 트리거가 강제.
+읽기: 글이 보이는 사람 전부 / 쓰기: 글 작성자(미정지) / 삭제: 작성자·관리자.
+Storage 버킷 `post-images`(공개 읽기, `{userId}/...` 경로에만 본인 업로드).
 
 ## 뷰
 
@@ -90,4 +94,5 @@ application_url은 일반 select로 노출되지 않음 — ACTONE_RLS_NOTES.md 
 
 ## 마이그레이션 상태
 
-파일은 작성 완료. **실제 Supabase 프로젝트에는 아직 적용되지 않음** (이 리포에는 Supabase 자격 증명이 없음). SQL Editor 또는 supabase CLI로 0001 → 0002 → seed 순서로 적용할 것.
+파일 작성 완료 + **로컬 PostgreSQL 16에서 전체 실행/행동 테스트 통과** (`supabase/tests/README.md`).
+**실제 Supabase 프로젝트에는 아직 적용되지 않음** (자격 증명 없음). SQL Editor 또는 supabase CLI로 0001 → 0002 → 0003 → seed 순서로 적용할 것.

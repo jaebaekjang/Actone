@@ -38,6 +38,7 @@ RLS 정의: `supabase/migrations/0002_rls.sql`. 모든 테이블에 RLS 활성�
 | resource_submissions | 제출자 본인 / 관리자 | 본인 + 미정지 + status=pending | 관리자만 | - |
 | member_level_logs | 본인 이력 / 관리자 | 관리자 (자동 승급은 definer 함수가 owner 권한으로 insert) | - | - |
 | app_settings | 관리자만 | 관리자만 | 관리자만 | 관리자만 |
+| post_images | 글이 보이는 사용자 | 글 작성자(미정지)·관리자, 글당 5장 트리거 제한 | - | 작성자·관리자 |
 | storage.objects (avatars) | 인증 사용자 읽기(버킷은 public) | 본인 폴더(`{uid}/...`)만 | 본인 폴더 | 본인 폴더 |
 
 ## 트리거 우회 메커니즘 (알아둘 것)
@@ -52,5 +53,5 @@ security definer 함수(owner=postgres)나 service_role 접속은 `current_user`
 - `posts.author_id`가 null인 시드 글은 "액트원 운영진"으로 표시됨. author null 글은 아무도 수정 권한이 없음(관리자 제외) — 의도된 동작.
 - 검색은 사용자 입력을 `ilike` 패턴에 넣기 전에 `,`와 `%`를 제거함(PostgREST or() 파싱/와일드카드 주입 방지). 새 검색 코드를 추가하면 동일하게 처리할 것.
 - `is_admin()`은 요청마다 profiles+admin_users 서브쿼리를 실행. 트래픽이 커지면 성능 검토 필요.
-- RLS는 **실제 Supabase 인스턴스에서 아직 통합 테스트되지 않음**. 적용 후 ACTONE_TODO_NEXT_MODEL.md의 검증 시나리오를 실행할 것.
+- RLS는 **로컬 PostgreSQL 16에서 행동 테스트 26건 전부 통과** (`supabase/tests/` — 게스트 차단, 자기 권한 상승 차단, application_url 게이팅, 자동 승급 ON/OFF, 관리자 이중 조건 등). 실제 Supabase 인스턴스(GoTrue/PostgREST 레이어)에서는 미검증 — 적용 후 ACTONE_TODO_NEXT_MODEL.md의 시나리오를 실행할 것.
 - 관리자 사이트는 anon key + 사용자 세션으로 동작(서비스 롤 키 불필요). 관리자 권한은 전적으로 RLS의 `is_admin()`이 부여 — admin_users를 비활성화하면 DB 수준에서 즉시 권한이 사라짐.

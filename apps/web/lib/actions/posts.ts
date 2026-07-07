@@ -4,6 +4,7 @@ import { revalidatePath } from "next/cache";
 import { redirect } from "next/navigation";
 import {
   CATEGORY_SLUGS,
+  MAX_POST_IMAGES,
   makeExcerpt,
   parseTags,
   postSchema,
@@ -11,6 +12,13 @@ import {
 } from "@actone/shared";
 import { createClient } from "@/lib/supabase";
 import type { ActionState } from "./auth";
+
+function parseImageUrls(formData: FormData): string[] {
+  return formData
+    .getAll("image_urls")
+    .filter((v): v is string => typeof v === "string" && /^https:\/\//.test(v))
+    .slice(0, MAX_POST_IMAGES);
+}
 
 function parseMeetupForm(formData: FormData) {
   return {
@@ -100,6 +108,17 @@ export async function createPost(
     });
   }
 
+  const imageUrls = parseImageUrls(formData);
+  if (imageUrls.length > 0) {
+    await supabase.from("post_images").insert(
+      imageUrls.map((url, index) => ({
+        post_id: post.id,
+        image_url: url,
+        sort_order: index,
+      })),
+    );
+  }
+
   revalidatePath("/community");
   redirect(`/posts/${post.id}`);
 }
@@ -166,6 +185,20 @@ export async function updatePost(
         is_regular_member_only: m.is_regular_member_only,
       },
       { onConflict: "post_id" },
+    );
+  }
+
+  // replace image set (uploaded files removed from the form are kept in
+  // storage but no longer referenced — acceptable for MVP)
+  const imageUrls = parseImageUrls(formData);
+  await supabase.from("post_images").delete().eq("post_id", postId);
+  if (imageUrls.length > 0) {
+    await supabase.from("post_images").insert(
+      imageUrls.map((url, index) => ({
+        post_id: postId,
+        image_url: url,
+        sort_order: index,
+      })),
     );
   }
 

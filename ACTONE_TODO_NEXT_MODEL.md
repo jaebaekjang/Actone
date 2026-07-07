@@ -2,11 +2,20 @@
 
 우선순위 순.
 
+## 0. 이미 검증된 것 (2026-07-07)
+
+- 마이그레이션 3개 + seed 전체가 **로컬 PostgreSQL 16에서 오류 없이 실행됨**.
+- RLS 행동 테스트 26건 전부 PASS (`supabase/tests/` — 재실행 방법은 그 폴더의 README).
+  게스트 차단, 자기 권한 상승 차단, application_url 게이팅, 자동 승급 OFF/ON,
+  관리자 이중 조건, 신고/제보 권한, post_images 5장 제한까지 확인됨.
+- 따라서 남은 리스크는 SQL 자체가 아니라 **Supabase 고유 레이어**(GoTrue/카카오 OAuth,
+  Storage 실제 업로드, PostgREST 뷰 권한)다.
+
 ## 1. Supabase 실인스턴스 적용 + 검증 (최우선)
 
-이 리포에는 Supabase 자격 증명이 없어 코드/SQL은 실제 인스턴스에서 한 번도 실행되지 않았다.
+이 리포에는 Supabase 자격 증명이 없어 실제 인스턴스에서는 실행되지 않았다.
 
-1. Supabase 프로젝트 생성 → SQL Editor에서 `0001_schema.sql` → `0002_rls.sql` → `seed.sql` 순서로 실행. 에러가 나면 해당 구문 수정(특히 storage 정책은 프로젝트 설정에 따라 권한 이슈 가능).
+1. Supabase 프로젝트 생성 → SQL Editor에서 `0001_schema.sql` → `0002_rls.sql` → `0003_post_images.sql` → `seed.sql` 순서로 실행. 에러가 나면 해당 구문 수정(특히 storage 정책은 프로젝트 설정에 따라 권한 이슈 가능).
 2. 카카오 OAuth 연결 (README 절차).
 3. `.env.local` 생성 후 `npm run dev:web`으로 수동 검증:
    - [ ] 카카오 로그인 → `/onboarding` → 저장 → `/community` 리다이렉트
@@ -32,8 +41,9 @@
 
 ## 3. 남은 기능 (스펙 내, 선택)
 
-- 게시글 이미지 업로드: post_images 테이블(스펙 §20) + write 폼 업로드(최대 5장, jpg/png/webp, 5MB) + storage 버킷/정책.
-- 카테고리 보드/검색 결과에서도 오프라인 모임 카드에 meetup 정보 표시(현재 홈/보드는 표시, 검색 결과는 미표시).
+- (완료됨) ~~게시글 이미지 업로드~~ — 0003 마이그레이션 + PostForm 업로더 + 글 상세 표시 구현.
+- (완료됨) ~~검색 결과 오프라인 모임 카드 정보~~ — 홈/보드/검색 모두 표시.
+- 글 수정 시 폼에서 제거한 이미지 파일의 Storage 정리(현재는 참조만 삭제, 파일은 잔존).
 
 ## 4. UI 개선 아이디어 (낮은 우선순위)
 
@@ -46,14 +56,16 @@
 - Supabase Auth Redirect URL에 프로덕션 콜백 2개 등록 확인.
 - siteConfig.socialLinks 실제 URL 채우기 (현재 빈 문자열 → "준비 중입니다").
 
-## 이미 실행된 명령 (2026-07-06, 이 리포에서)
+## 이미 실행된 명령 (이 리포에서)
 
 ```bash
 npm install                          # 성공
 npm run build --workspace apps/web   # 성공 (16 routes)
 npm run build --workspace apps/admin # 성공 (20 routes)
 npm run lint                         # 성공 (에러/경고 0)
-npm run build                        # 성공 (양쪽 모두)
+npm run build                        # 성공 (양쪽 모두, 이미지 기능 포함 재실행)
+# 로컬 PostgreSQL 16 (supabase/tests/README.md 절차):
+#   0001/0002/0003 마이그레이션 + seed 실행 성공, RLS 테스트 PASS 26 / FAIL 0
 ```
 
 빌드 에러 없음. 알려진 lint 경고 없음.

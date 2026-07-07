@@ -5,6 +5,7 @@ import {
   CATEGORY_SLUGS,
   type OfflineMeetupDetails,
   type Post,
+  type PostImage,
 } from "@actone/shared";
 import { PostForm } from "@/components/post-form";
 import { updatePost } from "@/lib/actions/posts";
@@ -47,6 +48,15 @@ export default async function EditPostPage({
     meetupDefaults = (data as OfflineMeetupDetails | null) ?? null;
   }
 
+  const { data: imagesData } = await supabase
+    .from("post_images")
+    .select("*")
+    .eq("post_id", postId)
+    .order("sort_order");
+  const imageDefaults = ((imagesData as PostImage[] | null) ?? []).map(
+    (i) => i.image_url,
+  );
+
   const boundUpdate = updatePost.bind(null, postId);
 
   return (
@@ -57,6 +67,8 @@ export default async function EditPostPage({
           mode="edit"
           categories={categories}
           action={boundUpdate}
+          userId={user.id}
+          imageDefaults={imageDefaults}
           defaultValues={{
             category_id: post.category_id,
             title: post.title,

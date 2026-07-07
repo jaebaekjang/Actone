@@ -15,12 +15,12 @@
 
 ## 부분 완료 / 미검증
 
-- **Supabase 실인스턴스 검증 0%**: 마이그레이션/seed/RLS/카카오 OAuth 전부 실제 프로젝트에서 실행해봐야 함. 최우선 작업 — `ACTONE_TODO_NEXT_MODEL.md`의 시나리오 참고.
-- 아바타 업로드는 구현됐지만 실제 Storage에 대해 미검증.
+- **마이그레이션+RLS는 로컬 PostgreSQL 16에서 검증 완료** (`supabase/tests/`, 26건 PASS) — 그러나 실제 Supabase 인스턴스(카카오 OAuth, GoTrue, Storage 실업로드, PostgREST)는 미검증. 최우선 작업 — `ACTONE_TODO_NEXT_MODEL.md` 참고.
+- 아바타/게시글 이미지 업로드는 구현됐지만 실제 Storage에 대해 미검증.
 
 ## 미구현 (스펙상 선택)
 
-- 게시글 이미지 업로드(post_images 테이블 + write 폼 업로드)
+- 없음. 게시글 이미지 업로드(post_images)까지 구현됨. 수정 시 제거된 이미지의 Storage 파일 정리만 남음(참조만 삭제됨).
 
 ## 핵심 파일 경로
 
@@ -50,7 +50,9 @@ apps/admin/
 
 supabase/migrations/0001_schema.sql   # 테이블/인덱스/카운터 트리거/handle_new_user
 supabase/migrations/0002_rls.sql      # RLS 전체 + 보호 트리거 + 뷰 + RPC + 자동 승급 + avatars 버킷
+supabase/migrations/0003_post_images.sql # 게시글 이미지(5장 제한 트리거, post-images 버킷)
 supabase/seed.sql                     # 카테고리 8개, rule(OFF), 샘플 글
+supabase/tests/                       # 로컬 Postgres 검증 하네스 (README에 실행법)
 ```
 
 ## 이어서 작업하는 방법

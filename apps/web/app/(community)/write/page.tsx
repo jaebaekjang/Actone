@@ -13,7 +13,7 @@ export default async function WritePage({
   searchParams: Promise<{ category?: string }>;
 }) {
   const { category: categorySlug } = await searchParams;
-  const { profile } = await getUserAndProfile();
+  const { user, profile } = await getUserAndProfile();
   const categories = (await getActiveCategories()).filter(
     (c) => !ADMIN_ONLY_CATEGORY_SLUGS.includes(c.slug),
   );
@@ -40,6 +40,7 @@ export default async function WritePage({
           mode="create"
           categories={categories}
           action={createPost}
+          userId={user?.id ?? ""}
           defaultValues={{ category_id: defaultCategory?.id ?? "" }}
         />
       </div>

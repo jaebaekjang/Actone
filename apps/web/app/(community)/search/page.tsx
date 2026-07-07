@@ -1,5 +1,9 @@
 import type { Metadata } from "next";
-import type { Post } from "@actone/shared";
+import {
+  CATEGORY_SLUGS,
+  type MeetupPublicDetails,
+  type Post,
+} from "@actone/shared";
 import { EmptyState } from "@/components/empty-state";
 import { PostCard } from "@/components/post-card";
 import { SearchInput } from "@/components/search-input";
@@ -18,6 +22,7 @@ export default async function SearchPage({
   const term = q?.trim() ?? "";
 
   let posts: Awaited<ReturnType<typeof attachRelations>> = [];
+  let meetupMap = new Map<string, MeetupPublicDetails>();
   if (term) {
     const supabase = await createClient();
     const safe = term.replaceAll(",", " ").replaceAll("%", "");
@@ -29,6 +34,19 @@ export default async function SearchPage({
       .order("created_at", { ascending: false })
       .limit(50);
     posts = await attachRelations((data as Post[] | null) ?? []);
+
+    const meetupPostIds = posts
+      .filter((p) => p.category?.slug === CATEGORY_SLUGS.offlineMeetups)
+      .map((p) => p.id);
+    if (meetupPostIds.length > 0) {
+      const { data: meetups } = await supabase
+        .from("offline_meetup_public")
+        .select("*")
+        .in("post_id", meetupPostIds);
+      meetupMap = new Map(
+        ((meetups as MeetupPublicDetails[] | null) ?? []).map((m) => [m.post_id, m]),
+      );
+    }
   }
 
   return (
@@ -43,7 +61,9 @@ export default async function SearchPage({
           </p>
           <div className="space-y-3">
             {posts.length > 0 ? (
-              posts.map((post) => <PostCard key={post.id} post={post} />)
+              posts.map((post) => (
+                <PostCard key={post.id} post={post} meetup={meetupMap.get(post.id)} />
+              ))
             ) : (
               <EmptyState
                 title="검색 결과가 없습니다"
