@@ -104,6 +104,51 @@
     background: linear-gradient(180deg, rgba(232, 221, 199, 0.05), rgba(232, 221, 199, 0.015));
     border: 1px solid rgba(232, 221, 199, 0.14);
   }
+  /* stage spotlights: warm ivory beams from the top corners aimed at center stage */
+  .stage-spotlight-left,
+  .stage-spotlight-right {
+    position: absolute;
+    top: -5rem;
+    width: clamp(14rem, 38vw, 30rem);
+    height: clamp(24rem, 72vh, 44rem);
+    background: linear-gradient(
+      to bottom,
+      rgba(248, 241, 220, 0.3) 0%,
+      rgba(232, 179, 106, 0.1) 52%,
+      transparent 100%
+    );
+    clip-path: polygon(44% 0, 56% 0, 100% 100%, 0% 100%);
+    filter: blur(22px);
+    opacity: 0.8;
+    pointer-events: none;
+  }
+  .stage-spotlight-left {
+    left: -3rem;
+    transform: rotate(-17deg);
+    transform-origin: top center;
+  }
+  .stage-spotlight-right {
+    right: -3rem;
+    transform: rotate(17deg);
+    transform-origin: top center;
+  }
+  @media (max-width: 640px) {
+    .stage-spotlight-left,
+    .stage-spotlight-right {
+      opacity: 0.45;
+    }
+  }
+  /* curtain valance: crimson scallops hanging along the top of the curtain-call band */
+  .curtain-edge {
+    height: 13px;
+    background-image: radial-gradient(
+      circle at 12px 0,
+      var(--color-festival-deep) 11px,
+      transparent 11.75px
+    );
+    background-size: 24px 13px;
+    background-repeat: repeat-x;
+  }
 }
 
 /* scroll-triggered reveal (activated by ScrollFx; no-op without JS) */
@@ -119,6 +164,95 @@
   [data-reveal].revealed {
     opacity: 1;
     transform: translateY(0);
+  }
+}
+
+/* ── stage props: ticket cards + microphone CTA ─────────────────────────────
+   Unlayered on purpose: they must win over layered utilities (rounded-lg,
+   active:translate-y-px) and over the [data-reveal] transition above. */
+
+/* ticket-shaped card/row: paper tint, punched side notches, dashed perforation.
+   Set --notch-bg to the section's background so the notch reads as a hole. */
+.ticket-card,
+.ticket-row {
+  --notch-bg: var(--color-background);
+  position: relative;
+  overflow: hidden;
+  border: 1px solid rgba(232, 221, 199, 0.16);
+  border-radius: 0.875rem;
+  background: linear-gradient(180deg, rgba(232, 221, 199, 0.07), rgba(232, 221, 199, 0.02));
+  transition: opacity 0.7s ease, transform 0.3s ease, box-shadow 0.3s ease,
+    border-color 0.3s ease;
+}
+.ticket-card::before,
+.ticket-card::after,
+.ticket-row::before,
+.ticket-row::after {
+  content: "";
+  position: absolute;
+  top: 50%;
+  width: 1.15rem;
+  height: 1.15rem;
+  border: 1px solid rgba(232, 221, 199, 0.2);
+  border-radius: 9999px;
+  background: var(--notch-bg);
+  transform: translateY(-50%);
+  pointer-events: none;
+}
+.ticket-card::before,
+.ticket-row::before {
+  left: -0.65rem;
+}
+.ticket-card::after,
+.ticket-row::after {
+  right: -0.65rem;
+}
+@media (hover: hover) {
+  .ticket-card:hover,
+  .ticket-row:hover {
+    transform: translateY(-3px);
+    border-color: rgba(210, 138, 50, 0.4);
+    box-shadow: 0 14px 30px rgba(0, 0, 0, 0.4), 0 2px 10px rgba(210, 138, 50, 0.12);
+  }
+}
+
+/* microphone CTA: capsule grip, warm stage-light glow, sound-wave pulse on hover */
+.microphone-button {
+  position: relative;
+  min-height: 52px;
+  border-radius: 9999px;
+  transition: transform 0.2s ease, box-shadow 0.25s ease, background-color 0.2s ease,
+    filter 0.2s ease;
+}
+.microphone-button::after {
+  content: "";
+  position: absolute;
+  inset: -4px;
+  border: 1.5px solid rgba(232, 179, 106, 0.55);
+  border-radius: 9999px;
+  opacity: 0;
+  pointer-events: none;
+}
+.microphone-button:hover {
+  transform: scale(1.03);
+  box-shadow: 0 0 0 1px rgba(232, 179, 106, 0.35), 0 6px 26px rgba(234, 179, 8, 0.28),
+    0 10px 24px rgba(0, 0, 0, 0.35);
+}
+.microphone-button:hover::after {
+  animation: mic-pulse 1.5s ease-out infinite;
+}
+.microphone-button:active {
+  transform: scale(0.98);
+}
+@keyframes mic-pulse {
+  0% {
+    opacity: 0.7;
+    transform: scale(1);
+  }
+  75%,
+  100% {
+    opacity: 0;
+    transform: scale(1.14);
   }
 }
 
@@ -147,6 +281,20 @@
   }
   .drift,
   .drift-delayed {
+    animation: none;
+  }
+  .ticket-card,
+  .ticket-row,
+  .microphone-button {
+    transition: none;
+  }
+  .ticket-card:hover,
+  .ticket-row:hover,
+  .microphone-button:hover,
+  .microphone-button:active {
+    transform: none;
+  }
+  .microphone-button:hover::after {
     animation: none;
   }
 }

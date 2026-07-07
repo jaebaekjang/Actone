@@ -10,23 +10,23 @@ export function StatsBand() {
   return (
     <section className="border-b">
       <div
-        className="mx-auto grid max-w-5xl grid-cols-2 gap-x-6 gap-y-12 px-4 py-16 md:grid-cols-4 md:py-24"
+        className="mx-auto grid max-w-5xl grid-cols-2 gap-4 px-4 py-16 md:grid-cols-4 md:gap-5 md:py-24"
         data-reveal
       >
         {STATS.map((stat) => (
-          <div key={stat.label}>
-            <p className="text-[clamp(3.5rem,7vw,5.5rem)] font-extrabold leading-none tracking-tight text-foreground [font-variant-numeric:tabular-nums]">
+          <div key={stat.label} className="ticket-card px-5 py-6 md:px-6 md:py-7">
+            <p className="text-[clamp(3rem,6vw,4.75rem)] font-extrabold leading-none tracking-tight text-foreground [font-variant-numeric:tabular-nums]">
               {stat.value}
               <span className="ml-1 align-baseline text-lg font-bold text-muted">
                 {stat.suffix}
               </span>
             </p>
-            <p className="mt-3 border-t border-foreground/15 pt-3 text-sm font-semibold text-muted">
+            <p className="mt-4 border-t border-dashed border-foreground/25 pt-3 text-sm font-semibold text-muted">
               {stat.label}
             </p>
           </div>
         ))}
-        <p className="col-span-2 -mt-4 text-sm leading-relaxed text-dim md:col-span-4">
+        <p className="col-span-2 mt-2 text-sm leading-relaxed text-dim md:col-span-4">
           액트원이 하는 일은 하나, 배우들이 모이는 것. 나머지 숫자는 앞으로도
           0에서 움직이지 않습니다.
         </p>

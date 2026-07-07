@@ -34,12 +34,12 @@ export function ShareCategories() {
       <div className="mx-auto max-w-5xl px-4 py-16 md:py-24">
         <SectionHeader eyebrow="함께 나누는 것" strong="이곳에서 나눌 수 있는 것" />
 
-        <ul className="mt-10 border-t border-foreground/12">
+        <ul className="mt-10 space-y-4 md:space-y-5">
           {SHARE_ITEMS.map((item, index) => (
             <li
               key={item.title}
               data-reveal
-              className="group grid grid-cols-[auto_1fr] items-baseline gap-x-4 gap-y-2 border-b border-foreground/12 py-7 transition-colors hover:bg-foreground/[0.02] md:grid-cols-[5rem_1fr_auto] md:gap-x-8 md:py-9"
+              className="ticket-row group grid grid-cols-[auto_1fr] items-baseline gap-x-4 gap-y-2 px-5 py-6 [--notch-bg:var(--color-surface)] md:grid-cols-[4.5rem_1fr_auto] md:gap-x-8 md:px-8 md:py-8"
             >
               <span className="text-sm font-bold text-festival [font-variant-numeric:tabular-nums]">
                 {String(index + 1).padStart(2, "0")}

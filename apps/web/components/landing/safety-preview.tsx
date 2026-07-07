@@ -21,14 +21,14 @@ export function SafetyPreview() {
           linkLabel="이용수칙 전체 보기"
         />
 
-        <ul className="mt-10 border-t border-foreground/12">
+        <ul className="mt-10 space-y-3 md:space-y-4">
           {RULES.map((rule, index) => (
             <li
               key={rule}
               data-reveal
-              className="flex items-center gap-4 border-b border-foreground/12 py-5 md:gap-8 md:py-6"
+              className="ticket-row flex items-center gap-4 px-5 py-4 md:gap-6 md:px-6 md:py-5"
             >
-              <span className="text-sm font-bold text-festival [font-variant-numeric:tabular-nums]">
+              <span className="inline-flex items-center self-stretch border-r border-dashed border-foreground/20 pr-4 text-sm font-bold text-festival [font-variant-numeric:tabular-nums] md:pr-6">
                 {String(index + 1).padStart(2, "0")}
               </span>
               <span className="text-lg font-semibold text-foreground md:text-xl">

@@ -1,14 +1,29 @@
 import { KakaoLoginButton } from "@/components/kakao-login-button";
+import { MicStand, StageCamera } from "./stage-decor";
 
 /**
- * The stage lights up: after a dark theater lobby the page ends on a single
- * kakao-yellow band — the one full-bleed color moment on the landing page.
+ * Curtain call: after a dark theater lobby the page ends on a single
+ * kakao-yellow band — crimson curtain valance above, film cameras shooting
+ * from the corners, a standing mic waiting at center stage.
  */
 export function FinalCta() {
   return (
-    <section className="border-t border-black/10 bg-kakao text-black">
-      <div className="mx-auto max-w-4xl px-4 py-24 text-center md:py-32">
-        <p className="text-sm font-bold tracking-wide text-black/60">무대의 조명이 켜집니다</p>
+    <section className="relative overflow-hidden border-t border-black/10 bg-kakao text-black">
+      <div className="curtain-edge" aria-hidden />
+      <StageCamera
+        glintId="stage-camera-left"
+        className="pointer-events-none absolute bottom-5 left-4 hidden w-24 text-black/80 md:block lg:left-8 lg:w-28"
+      />
+      <StageCamera
+        glintId="stage-camera-right"
+        className="pointer-events-none absolute bottom-5 right-4 hidden w-24 -scale-x-100 text-black/80 md:block lg:right-8 lg:w-28"
+      />
+      <div className="relative mx-auto max-w-4xl px-4 py-24 text-center md:py-32">
+        <MicStand className="mx-auto h-14 text-black/85 md:h-16" />
+        <p className="mt-5 font-mono text-[11px] font-semibold tracking-[0.35em] text-black/45">
+          CURTAIN CALL
+        </p>
+        <p className="mt-2 text-sm font-bold tracking-wide text-black/60">무대의 조명이 켜집니다</p>
         <h2 className="mt-5 text-[clamp(2.25rem,6.5vw,4.5rem)] font-extrabold leading-[1.12] tracking-tight text-black">
           오늘도 혼자 버티고 있다면,
           <br />
@@ -21,7 +36,7 @@ export function FinalCta() {
         <div className="mt-10 flex justify-center">
           <KakaoLoginButton
             label="카카오로 대기실 입장하기"
-            className="border border-black/25 bg-black text-kakao hover:bg-black/90"
+            className="microphone-button border border-black/25 bg-black px-7 text-kakao hover:bg-black/90"
           />
         </div>
       </div>

@@ -1,13 +1,18 @@
 import Link from "next/link";
 import { ArrowRight } from "lucide-react";
 import { KakaoLoginButton } from "@/components/kakao-login-button";
+import { StageSpotlights } from "./stage-decor";
 
 export function ActOneHero() {
   return (
-    <section className="festival-hero border-b">
+    <section className="festival-hero relative overflow-hidden border-b">
+      <StageSpotlights />
       <div className="mx-auto flex min-h-[78vh] max-w-6xl flex-col items-center justify-center px-4 py-24 text-center md:min-h-[86vh] md:py-32">
         <div data-parallax>
-          <p className="text-sm font-bold tracking-wide text-foreground/85">
+          <p className="font-mono text-[11px] font-semibold tracking-[0.35em] text-foreground/45">
+            ACT 01
+          </p>
+          <p className="mt-3 text-sm font-bold tracking-wide text-foreground/85">
             멈추지 않는 배우들의 이야기
           </p>
           <p className="mt-4 text-xl font-medium text-foreground/90 md:text-2xl">
@@ -24,7 +29,10 @@ export function ActOneHero() {
         </p>
 
         <div className="mt-10 flex w-full flex-col items-center justify-center gap-3 sm:w-auto sm:flex-row">
-          <KakaoLoginButton label="카카오로 대기실 입장하기" className="w-full sm:w-auto" />
+          <KakaoLoginButton
+            label="카카오로 대기실 입장하기"
+            className="microphone-button w-full px-7 sm:w-auto"
+          />
           <Link
             href="#waiting-room"
             className="group inline-flex h-12 w-full items-center justify-center gap-2.5 rounded-full border border-foreground/30 pl-6 pr-2 text-base font-semibold text-foreground transition-colors hover:border-foreground/70 sm:w-auto"
