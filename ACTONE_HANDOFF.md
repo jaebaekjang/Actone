@@ -15,8 +15,9 @@
 
 ## 부분 완료 / 미검증
 
-- **마이그레이션+RLS는 로컬 PostgreSQL 16에서 검증 완료** (`supabase/tests/`, 26건 PASS) — 그러나 실제 Supabase 인스턴스(카카오 OAuth, GoTrue, Storage 실업로드, PostgREST)는 미검증. 최우선 작업 — `ACTONE_TODO_NEXT_MODEL.md` 참고.
-- 아바타/게시글 이미지 업로드는 구현됐지만 실제 Storage에 대해 미검증.
+- **마이그레이션+RLS는 로컬 PostgreSQL 16에서 검증 완료** (`supabase/tests/`, 26건 PASS).
+- **브라우저 E2E 49/49 PASS** (`e2e/` 하네스) — 실제 앱을 로컬 Supabase 호환 스택으로 구동해 사용자/관리자 핵심 플로우 전부 화면 단위 검증.
+- 남은 미검증: 실제 Supabase 인스턴스의 카카오 OAuth 리다이렉트, Storage 실업로드(아바타/게시글 이미지), 실제 PostgREST 동작. `ACTONE_TODO_NEXT_MODEL.md` 참고.
 
 ## 미구현 (스펙상 선택)
 

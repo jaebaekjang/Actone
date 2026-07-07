@@ -73,3 +73,4 @@
 - ✅ `npm run lint` — 워크스페이스 전체 통과 (에러/경고 0)
 - ✅ `npm run build` — apps/web 16 라우트, apps/admin 20 라우트 모두 컴파일 성공
 - ✅ 마이그레이션/RLS 로컬 Postgres 검증 — `supabase/tests/README.md` (PASS 26 / FAIL 0)
+- ✅ **브라우저 E2E 49/49 PASS** — 실제 앱을 Playwright로 구동(로컬 Supabase 호환 스택), `e2e/README.md` 참고. 게스트 차단, 온보딩, 글/댓글/좋아요/북마크/신고/검색, 모임 링크 게이팅(URL이 DOM에 미노출), 자료 제보 승인 플로우, 관리자 접근 제어/등급 변경까지 화면 단위로 검증 (2026-07-07)

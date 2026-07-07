@@ -5,11 +5,14 @@
 ## 0. 이미 검증된 것 (2026-07-07)
 
 - 마이그레이션 3개 + seed 전체가 **로컬 PostgreSQL 16에서 오류 없이 실행됨**.
-- RLS 행동 테스트 26건 전부 PASS (`supabase/tests/` — 재실행 방법은 그 폴더의 README).
-  게스트 차단, 자기 권한 상승 차단, application_url 게이팅, 자동 승급 OFF/ON,
-  관리자 이중 조건, 신고/제보 권한, post_images 5장 제한까지 확인됨.
-- 따라서 남은 리스크는 SQL 자체가 아니라 **Supabase 고유 레이어**(GoTrue/카카오 OAuth,
-  Storage 실제 업로드, PostgREST 뷰 권한)다.
+- RLS 행동 테스트 26건 전부 PASS (`supabase/tests/`).
+- **브라우저 E2E 49/49 PASS** (`e2e/`): 실제 Next.js 앱(무수정)을 Playwright로 구동 —
+  게스트 차단, 온보딩 전체 플로우, 글 CRUD/soft delete, 댓글/좋아요/북마크(카운터 트리거),
+  신고→관리자 처리→대상 숨김, 모임 신청 링크 게이팅(신규회원 DOM에 URL 부재 → 정회원 승급 후 노출),
+  검색, 마이페이지, 자료 제보→승인→자료실 글 생성→운영진 표기, 관리자 /denied→권한 부여→대시보드,
+  튜터 수동 지정 + manual 로그, 자동 승급 규칙 UI 기본 OFF까지 화면 단위 확인.
+- 따라서 남은 리스크는 **Supabase 고유 레이어**(GoTrue/카카오 OAuth 리다이렉트,
+  Storage 실제 업로드, PostgREST의 실제 뷰 권한/임베딩 동작)뿐이다.
 
 ## 1. Supabase 실인스턴스 적용 + 검증 (최우선)
 
