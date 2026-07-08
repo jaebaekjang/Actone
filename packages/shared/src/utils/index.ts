@@ -24,7 +24,15 @@ export function formatDateTime(value: string | Date | null | undefined): string 
     day: "numeric",
     hour: "2-digit",
     minute: "2-digit",
+    hour12: false,
   });
+}
+
+/** meetup_date 등 DATE 컬럼 표시용 — 드라이버가 timestamp로 돌려줘도 YYYY-MM-DD만 남긴다 */
+export function formatDateOnly(value: string | Date | null | undefined): string {
+  if (!value) return "";
+  if (typeof value === "string") return value.slice(0, 10);
+  return value.toISOString().slice(0, 10);
 }
 
 export function timeAgo(value: string | Date): string {

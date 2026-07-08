@@ -32,7 +32,7 @@ export function CommentForm({ postId }: { postId: string }) {
         maxLength={1000}
         required
       />
-      {error ? <p className="text-sm text-red-400">{error}</p> : null}
+      {error ? <p className="text-sm text-danger-soft">{error}</p> : null}
       <div className="flex justify-end">
         <Button type="submit" size="sm" disabled={pending}>
           {pending ? "등록 중…" : "댓글 등록"}

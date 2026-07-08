@@ -33,8 +33,8 @@ export function ReportReviewForm({ reportId }: { reportId: string }) {
         <Textarea id="admin_note" name="admin_note" placeholder="처리 사유나 메모를 남겨주세요." />
       </div>
 
-      {state.error ? <p className="text-sm text-red-400">{state.error}</p> : null}
-      {state.success ? <p className="text-sm text-emerald-400">{state.success}</p> : null}
+      {state.error ? <p className="text-sm text-danger">{state.error}</p> : null}
+      {state.success ? <p className="text-sm text-success">{state.success}</p> : null}
 
       <Button type="submit" disabled={pending}>
         {pending ? "처리 중…" : "처리하기"}

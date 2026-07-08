@@ -46,7 +46,7 @@ export function ReportDialog({
       <button
         type="button"
         onClick={() => setOpen(true)}
-        className="inline-flex items-center gap-1 text-xs text-muted hover:text-red-400"
+        className="inline-flex items-center gap-1 text-xs text-muted hover:text-danger-soft"
       >
         <Flag className="h-3.5 w-3.5" aria-hidden />
         신고
@@ -101,7 +101,7 @@ export function ReportDialog({
               maxLength={500}
             />
 
-            {error ? <p className="mt-2 text-sm text-red-400">{error}</p> : null}
+            {error ? <p className="mt-2 text-sm text-danger-soft">{error}</p> : null}
 
             <div className="mt-4 flex justify-end gap-2">
               <Button variant="secondary" size="sm" onClick={() => setOpen(false)}>

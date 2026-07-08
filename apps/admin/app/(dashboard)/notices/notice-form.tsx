@@ -41,7 +41,7 @@ export function NoticeForm({
         커뮤니티 홈 상단 고정
       </label>
 
-      {state.error ? <p className="text-sm text-red-400">{state.error}</p> : null}
+      {state.error ? <p className="text-sm text-danger">{state.error}</p> : null}
 
       <Button type="submit" disabled={pending}>
         {pending ? "저장 중…" : postId ? "공지 수정" : "공지 등록"}

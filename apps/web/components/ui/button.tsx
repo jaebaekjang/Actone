@@ -2,10 +2,10 @@ import { cn } from "@actone/shared";
 import type { ButtonHTMLAttributes } from "react";
 
 const variants = {
-  primary: "bg-accent text-white hover:bg-accent/90",
-  secondary: "border bg-surface-soft text-foreground hover:bg-surface-soft/70",
+  primary: "bg-accent text-white hover:bg-accent-hover",
+  secondary: "border bg-transparent text-foreground hover:bg-surface-soft",
   ghost: "text-muted hover:bg-surface-soft hover:text-foreground",
-  danger: "bg-red-800 text-white hover:bg-red-700",
+  danger: "bg-danger text-white hover:bg-danger/85",
   kakao: "bg-kakao font-semibold text-black hover:brightness-95",
 } as const;
 
@@ -31,7 +31,7 @@ export function Button({
     <button
       type={type}
       className={cn(
-        "inline-flex items-center justify-center gap-2 rounded-lg font-medium transition-colors disabled:pointer-events-none disabled:opacity-50",
+        "inline-flex items-center justify-center gap-2 rounded-lg font-medium transition-colors duration-150 disabled:pointer-events-none disabled:opacity-50",
         variants[variant],
         sizes[size],
         className,
@@ -47,7 +47,7 @@ export function buttonStyles(
   className?: string,
 ) {
   return cn(
-    "inline-flex items-center justify-center gap-2 rounded-lg font-medium transition-colors",
+    "inline-flex items-center justify-center gap-2 rounded-lg font-medium transition-colors duration-150",
     variants[variant],
     sizes[size],
     className,

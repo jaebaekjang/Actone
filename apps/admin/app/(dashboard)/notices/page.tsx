@@ -40,7 +40,7 @@ export default async function NoticesAdminPage() {
         action={
           <Link
             href="/notices/new"
-            className="inline-flex h-10 items-center rounded-lg bg-accent px-4 text-sm font-medium text-white hover:bg-accent/90"
+            className="inline-flex h-10 items-center rounded-lg bg-accent px-4 text-sm font-medium text-white hover:bg-accent-hover"
           >
             공지 작성
           </Link>

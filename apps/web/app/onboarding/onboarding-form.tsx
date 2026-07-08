@@ -124,7 +124,7 @@ export function OnboardingForm() {
         <FieldError message={form.formState.errors.expectation?.message} />
       </div>
 
-      {serverError ? <p className="text-sm text-red-400">{serverError}</p> : null}
+      {serverError ? <p className="text-sm text-danger-soft">{serverError}</p> : null}
 
       <Button type="submit" size="lg" className="w-full" disabled={pending}>
         {pending ? "저장 중…" : "액트원 시작하기"}

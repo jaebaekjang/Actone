@@ -81,7 +81,7 @@ export default async function PostsAdminPage({
         </select>
         <button
           type="submit"
-          className="h-10 rounded-lg bg-accent px-4 text-sm font-medium text-white hover:bg-accent/90"
+          className="h-10 rounded-lg bg-accent px-4 text-sm font-medium text-white hover:bg-accent-hover"
         >
           검색
         </button>

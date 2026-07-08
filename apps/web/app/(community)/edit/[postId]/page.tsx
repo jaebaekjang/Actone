@@ -60,8 +60,8 @@ export default async function EditPostPage({
   const boundUpdate = updatePost.bind(null, postId);
 
   return (
-    <div className="mx-auto max-w-2xl">
-      <h1 className="text-xl font-bold text-foreground">글 수정</h1>
+    <div className="mx-auto max-w-[720px]">
+      <h1 className="text-[24px] font-semibold tracking-tight text-foreground">글 수정</h1>
       <div className="mt-6">
         <PostForm
           mode="edit"

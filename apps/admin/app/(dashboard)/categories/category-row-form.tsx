@@ -49,9 +49,9 @@ export function CategoryRowForm({ category }: { category: Category }) {
           활성화
         </label>
         <div className="flex items-center gap-3">
-          {state.error ? <span className="text-xs text-red-400">{state.error}</span> : null}
+          {state.error ? <span className="text-xs text-danger">{state.error}</span> : null}
           {state.success ? (
-            <span className="text-xs text-emerald-400">{state.success}</span>
+            <span className="text-xs text-success">{state.success}</span>
           ) : null}
           <Button type="submit" size="sm" disabled={pending}>
             {pending ? "저장 중…" : "저장"}

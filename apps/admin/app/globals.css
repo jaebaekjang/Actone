@@ -1,33 +1,64 @@
 @import "tailwindcss";
 
+/*
+ * Act One admin — 밝은 운영 인터페이스.
+ * 소비자 사이트(다크 백스테이지)와 의도적으로 분리된 팔레트.
+ * See ACTONE_DESIGN_SYSTEM.md §admin.
+ */
 @theme {
   --font-sans: "Pretendard Variable", Pretendard, -apple-system, BlinkMacSystemFont,
     system-ui, Roboto, "Apple SD Gothic Neo", "Noto Sans KR", "Malgun Gothic", sans-serif;
 
-  /* dark theater palette */
-  --color-background: #0f0f10;
-  --color-surface: #18181b;
-  --color-surface-soft: #232326;
-  --color-foreground: #f4f4f5;
-  --color-muted: #a1a1aa;
-  --color-accent: #f97316;
-  --color-accent-soft: #fdba74;
-  --color-line: #2f2f33;
-  --color-gold: #eab308;
+  --color-background: #f5f4f1;
+  --color-surface: #ffffff;
+  --color-surface-soft: #edebe6;
+  --color-foreground: #1e1d1a;
+  --color-muted: #6b6862;
+  --color-line: #ddd9d1;
+
+  --color-accent: #d85b25;
+  --color-accent-hover: #b8481a;
+  --color-accent-soft: #b04a1c; /* accent-tinted text on light surfaces */
+
+  --color-success: #347a52;
+  --color-warning: #9a6a1c;
+  --color-danger: #b3413d;
+
+  --color-gold: #8a6a2f; /* tutor mark on light */
   --color-kakao: #fee500;
 }
 
 @layer base {
   html {
-    color-scheme: dark;
+    color-scheme: light;
   }
   body {
     background-color: var(--color-background);
     color: var(--color-foreground);
     font-family: var(--font-sans);
     -webkit-font-smoothing: antialiased;
+    word-break: keep-all;
+    overflow-wrap: break-word;
   }
   * {
     border-color: var(--color-line);
+  }
+  :focus-visible {
+    outline: 2px solid var(--color-accent);
+    outline-offset: 2px;
+  }
+  @media (prefers-reduced-motion: reduce) {
+    *,
+    *::before,
+    *::after {
+      animation-duration: 0.01ms !important;
+      transition-duration: 0.01ms !important;
+    }
+  }
+}
+
+@layer components {
+  .tnum {
+    font-variant-numeric: tabular-nums;
   }
 }

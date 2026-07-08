@@ -18,11 +18,11 @@ export default async function CommunityLayout({
     <div className="flex min-h-screen flex-col">
       <Header />
       {profile.is_suspended ? (
-        <div className="border-b border-red-900 bg-red-950/60 px-4 py-2.5 text-center text-sm text-red-200">
+        <div className="border-b border-danger/40 bg-danger/10 px-4 py-2.5 text-center text-sm text-danger-soft">
           현재 계정이 일시 정지 상태입니다. 글 작성, 댓글, 좋아요 등 일부 기능이 제한됩니다.
         </div>
       ) : null}
-      <main className="mx-auto w-full max-w-5xl flex-1 px-4 py-6 pb-24 md:pb-10">
+      <main className="mx-auto w-full max-w-[1180px] flex-1 px-5 py-8 pb-24 md:px-8 md:pb-12 lg:px-10">
         {children}
       </main>
       <Footer />

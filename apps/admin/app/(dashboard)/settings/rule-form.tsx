@@ -66,8 +66,8 @@ export function RuleForm({ rule }: { rule: RegularMemberRule }) {
         </div>
       </div>
 
-      {state.error ? <p className="text-sm text-red-400">{state.error}</p> : null}
-      {state.success ? <p className="text-sm text-emerald-400">{state.success}</p> : null}
+      {state.error ? <p className="text-sm text-danger">{state.error}</p> : null}
+      {state.success ? <p className="text-sm text-success">{state.success}</p> : null}
 
       <Button type="submit" disabled={pending}>
         {pending ? "저장 중…" : "설정 저장"}

@@ -180,7 +180,7 @@ export function ProfileEditForm({
         <FieldError message={form.formState.errors.bio?.message} />
       </div>
 
-      {serverError ? <p className="text-sm text-red-400">{serverError}</p> : null}
+      {serverError ? <p className="text-sm text-danger-soft">{serverError}</p> : null}
 
       <Button type="submit" size="lg" className="w-full" disabled={pending || uploading}>
         {pending ? "저장 중…" : "저장하기"}

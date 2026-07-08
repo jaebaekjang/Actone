@@ -7,6 +7,7 @@ import {
   CATEGORY_SLUGS,
   MEETUP_LINK_RESTRICTED_MESSAGE,
   MEETUP_LINK_SUSPENDED_MESSAGE,
+  formatDateOnly,
   formatDateTime,
   type Comment,
   type MeetupPublicDetails,
@@ -104,9 +105,9 @@ export default async function PostDetailPage({
   const comments = await attachCommentAuthors((commentsRes.data as Comment[] | null) ?? []);
 
   return (
-    <article className="mx-auto max-w-3xl">
+    <article className="mx-auto max-w-[760px]">
       {post.status === "hidden" ? (
-        <p className="mb-4 rounded-lg border border-amber-600/40 bg-amber-500/10 px-4 py-2.5 text-sm text-amber-200">
+        <p className="mb-4 border-l-2 border-warning bg-warning/8 px-4 py-2.5 text-sm text-warning-soft">
           이 글은 관리자에 의해 숨김 처리되어 다른 회원에게 보이지 않습니다.
         </p>
       ) : null}
@@ -121,7 +122,7 @@ export default async function PostDetailPage({
             {withRelations.category.name}
           </Link>
         ) : null}
-        <h1 className="mt-2 text-xl font-bold leading-snug text-foreground md:text-2xl">
+        <h1 className="mt-2 text-[23px] font-semibold leading-[1.4] tracking-tight text-foreground md:text-[27px]">
           {post.title}
         </h1>
         <div className="mt-3 flex flex-wrap items-center justify-between gap-2">
@@ -154,15 +155,13 @@ export default async function PostDetailPage({
 
       {/* meetup details */}
       {meetup ? (
-        <div className="mt-5 rounded-xl border bg-surface p-5">
+        <div className="mt-6 border-l-2 border-accent bg-surface px-5 py-5">
           <div className="flex flex-wrap gap-2">
-            <span className="rounded-full bg-accent/15 px-2.5 py-1 text-xs font-medium text-accent-soft">
+            <span className="border border-accent/50 px-2 py-0.5 text-xs font-medium text-accent-soft">
               오프라인
             </span>
             {meetup.is_regular_member_only ? (
-              <span className="rounded-full bg-accent/15 px-2.5 py-1 text-xs font-medium text-accent-soft">
-                정회원 전용
-              </span>
+              <span className="border px-2 py-0.5 text-xs text-muted">정회원 전용</span>
             ) : null}
           </div>
           <dl className="mt-3 grid gap-x-6 gap-y-2 text-sm text-muted sm:grid-cols-2">
@@ -175,7 +174,7 @@ export default async function PostDetailPage({
             {meetup.meetup_date ? (
               <div className="flex items-center gap-2">
                 <CalendarDays className="h-4 w-4 text-accent" aria-hidden />
-                날짜: <span className="text-foreground">{meetup.meetup_date}</span>
+                날짜: <span className="text-foreground">{formatDateOnly(meetup.meetup_date)}</span>
               </div>
             ) : null}
             {meetup.meetup_time ? (
@@ -227,7 +226,7 @@ export default async function PostDetailPage({
       ) : null}
 
       {/* content */}
-      <div className="mt-6 whitespace-pre-wrap leading-relaxed text-foreground">
+      <div className="mt-7 whitespace-pre-wrap text-[16px] leading-[1.8] text-foreground">
         {post.content}
       </div>
 
@@ -257,7 +256,7 @@ export default async function PostDetailPage({
             <Link
               key={tag}
               href={`/search?q=${encodeURIComponent(tag)}`}
-              className="rounded-full bg-surface-soft px-3 py-1 text-xs text-accent-soft hover:bg-surface-soft/70"
+              className="border px-2.5 py-1 text-xs text-muted transition-colors duration-150 hover:border-accent/60 hover:text-accent-soft"
             >
               #{tag}
             </Link>
@@ -278,11 +277,11 @@ export default async function PostDetailPage({
 
       {/* comments */}
       <section className="mt-8">
-        <h2 className="font-semibold text-foreground">댓글 {comments.length}</h2>
+        <h2 className="tnum font-semibold text-foreground">댓글 {comments.length}</h2>
 
-        <div className="mt-4 space-y-4">
+        <div className="mt-2">
           {comments.map((comment) => (
-            <div key={comment.id} className="rounded-xl border bg-surface p-4">
+            <div key={comment.id} className="border-b py-4">
               <div className="flex items-center justify-between gap-2">
                 <AuthorLabel
                   nickname={comment.author?.nickname}
@@ -291,7 +290,9 @@ export default async function PostDetailPage({
                   className="text-xs"
                 />
                 <div className="flex items-center gap-3">
-                  <span className="text-xs text-muted">{formatDateTime(comment.created_at)}</span>
+                  <span className="tnum text-xs text-muted">
+                    {formatDateTime(comment.created_at)}
+                  </span>
                   {user && comment.author_id === user.id ? (
                     <DeleteCommentButton commentId={comment.id} postId={post.id} />
                   ) : (
@@ -299,13 +300,13 @@ export default async function PostDetailPage({
                   )}
                 </div>
               </div>
-              <p className="mt-2 whitespace-pre-wrap text-sm leading-relaxed text-foreground">
+              <p className="mt-2 whitespace-pre-wrap text-sm leading-[1.75] text-foreground">
                 {comment.content}
               </p>
             </div>
           ))}
           {comments.length === 0 ? (
-            <p className="rounded-xl border border-dashed bg-surface px-4 py-8 text-center text-sm text-muted">
+            <p className="border-b py-8 text-center text-sm text-muted">
               아직 댓글이 없습니다. 첫 댓글을 남겨보세요.
             </p>
           ) : null}
@@ -313,7 +314,7 @@ export default async function PostDetailPage({
 
         <div className="mt-6">
           {profile?.is_suspended ? (
-            <p className="rounded-lg border bg-surface px-4 py-3 text-sm text-muted">
+            <p className="border bg-surface px-4 py-3 text-sm text-muted">
               현재 계정 상태에서는 댓글을 작성할 수 없습니다.
             </p>
           ) : (
