@@ -28,11 +28,19 @@ export function formatDateTime(value: string | Date | null | undefined): string 
   });
 }
 
-/** meetup_date 등 DATE 컬럼 표시용 — 드라이버가 timestamp로 돌려줘도 YYYY-MM-DD만 남긴다 */
+const WEEKDAYS_KO = ["일", "월", "화", "수", "목", "금", "토"] as const;
+
+/**
+ * meetup_date 등 DATE 컬럼 표시용 — 드라이버가 timestamp로 돌려줘도
+ * "YYYY-MM-DD (요일)"만 남긴다.
+ */
 export function formatDateOnly(value: string | Date | null | undefined): string {
   if (!value) return "";
-  if (typeof value === "string") return value.slice(0, 10);
-  return value.toISOString().slice(0, 10);
+  const iso =
+    typeof value === "string" ? value.slice(0, 10) : value.toISOString().slice(0, 10);
+  const parsed = new Date(`${iso}T00:00:00Z`);
+  if (Number.isNaN(parsed.getTime())) return iso;
+  return `${iso} (${WEEKDAYS_KO[parsed.getUTCDay()]})`;
 }
 
 export function timeAgo(value: string | Date): string {
