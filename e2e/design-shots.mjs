@@ -21,6 +21,11 @@ const sql = (q, p) => db.query(q, p);
 const U = "44444444-4444-4444-4444-444444444444";
 
 // ---- fixture state: one regular member who is also an admin ----
+// drop leftovers from e2e.mjs runs so screenshots only show seed-tone content
+await sql(
+  `delete from posts where title in ('오디션 체크리스트 제보','E2E 첫 글입니다','수정된 제목입니다')
+   or content like 'E2E%'`,
+);
 await sql("delete from reports");
 await sql("delete from comments where author_id = $1", [U]);
 await sql("update profiles set member_level_updated_by=null where member_level_updated_by=$1", [U]);
