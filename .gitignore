@@ -27,3 +27,6 @@ yarn-error.log*
 
 # vercel
 .vercel
+
+# e2e run artifacts
+e2e/shots/

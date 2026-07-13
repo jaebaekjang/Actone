@@ -33,8 +33,8 @@ export function MemberLevelForm({
         <Label htmlFor="reason">변경 사유</Label>
         <Input id="reason" name="reason" placeholder="예: 오프라인 모임 3회 참석 확인" />
       </div>
-      {state.error ? <p className="text-sm text-red-400">{state.error}</p> : null}
-      {state.success ? <p className="text-sm text-emerald-400">{state.success}</p> : null}
+      {state.error ? <p className="text-sm text-danger">{state.error}</p> : null}
+      {state.success ? <p className="text-sm text-success">{state.success}</p> : null}
       <Button type="submit" disabled={pending}>
         {pending ? "변경 중…" : "등급 변경"}
       </Button>

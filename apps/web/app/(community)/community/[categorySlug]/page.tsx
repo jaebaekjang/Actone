@@ -11,7 +11,7 @@ import {
   type SortValue,
 } from "@actone/shared";
 import { EmptyState } from "@/components/empty-state";
-import { PostCard } from "@/components/post-card";
+import { CommunityPostRow } from "@/components/post-row";
 import { SearchInput } from "@/components/search-input";
 import { WarningBox } from "@/components/warning-box";
 import { buttonStyles } from "@/components/ui/button";
@@ -97,10 +97,14 @@ export default async function CategoryBoardPage({
   };
 
   return (
-    <div className="space-y-5">
-      <div>
-        <h1 className="text-xl font-bold text-foreground">{category.name}</h1>
-        <p className="mt-1 text-sm leading-relaxed text-muted">{category.description}</p>
+    <div className="mx-auto max-w-[860px] space-y-6">
+      <div className="border-b pb-5">
+        <h1 className="text-[24px] font-semibold tracking-tight text-foreground md:text-[28px]">
+          {category.name}
+        </h1>
+        <p className="mt-2 max-w-xl text-sm leading-[1.75] text-muted">
+          {category.description}
+        </p>
       </div>
 
       {category.slug === CATEGORY_SLUGS.fieldReviews ? (
@@ -122,16 +126,16 @@ export default async function CategoryBoardPage({
         </Link>
       </div>
 
-      <div className="flex gap-1 overflow-x-auto">
+      <div className="flex gap-5 overflow-x-auto border-b">
         {SORT_OPTIONS.map((option) => (
           <Link
             key={option.value}
             href={`/community/${category.slug}${buildQuery({ sort: option.value, page: 1 })}`}
             className={cn(
-              "shrink-0 rounded-full px-3 py-1.5 text-sm",
+              "shrink-0 border-b-2 pb-2.5 text-sm transition-colors duration-150",
               sort === option.value
-                ? "bg-accent/15 font-medium text-accent-soft"
-                : "text-muted hover:text-foreground",
+                ? "border-accent font-medium text-foreground"
+                : "border-transparent text-muted hover:text-foreground",
             )}
           >
             {option.label}
@@ -139,10 +143,10 @@ export default async function CategoryBoardPage({
         ))}
       </div>
 
-      <div className="space-y-3">
+      <div>
         {posts.length > 0 ? (
           posts.map((post) => (
-            <PostCard
+            <CommunityPostRow
               key={post.id}
               post={post}
               meetup={meetupMap.get(post.id)}

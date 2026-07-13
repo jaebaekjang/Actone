@@ -68,7 +68,7 @@ export function ResourceSubmitForm() {
         <FieldError message={form.formState.errors.submission_reason?.message} />
       </div>
 
-      {serverError ? <p className="text-sm text-red-400">{serverError}</p> : null}
+      {serverError ? <p className="text-sm text-danger-soft">{serverError}</p> : null}
 
       <Button type="submit" size="lg" className="w-full" disabled={pending}>
         {pending ? "접수 중…" : "자료 제보하기"}

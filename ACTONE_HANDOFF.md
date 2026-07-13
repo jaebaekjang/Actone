@@ -11,6 +11,12 @@
 - 오프라인 모임 신청 링크 서버측 접근 제한(뷰 + security definer RPC)
 - 분리된 관리자 사이트 전체(대시보드~관리자 계정 관리)
 - 푸터(사업자 정보/소셜), 카카오채널 플로팅 버튼, 모바일 하단 내비
+- **V3 디자인 시스템 구현 완료 (2026-07-08)** — 빈 무대 스포트라이트 히어로(CSS 전용),
+  에디토리얼 다크 사용자 사이트 + 라이트 운영 관리자 사이트 분리, 행 기반 게시판,
+  랜딩은 모임 중심 구성(사용자 요청). `ACTONE_DESIGN_SYSTEM.md`/`ACTONE_PAGE_SPECS.md`/
+  `ACTONE_DESIGN_QA.md` + `docs/design-screenshots/`(390/768/1440) 참고.
+  디자인 언어를 바꾸지 말 것 — 기본 shadcn 외형/카드 그리드로 회귀 금지.
+- 루트 `CLAUDE.md`, `.claude/rules/` 4종, `.claude/agents/` 4종 (작업 규칙/서브에이전트)
 - lint/build 양쪽 앱 통과 (ACTONE_FEATURE_STATUS.md 참고)
 
 ## 부분 완료 / 미검증

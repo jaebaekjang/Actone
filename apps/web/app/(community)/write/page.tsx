@@ -21,8 +21,8 @@ export default async function WritePage({
 
   if (profile?.is_suspended) {
     return (
-      <div className="mx-auto max-w-2xl">
-        <h1 className="text-xl font-bold text-foreground">글쓰기</h1>
+      <div className="mx-auto max-w-[720px]">
+        <h1 className="text-[24px] font-semibold tracking-tight text-foreground">글쓰기</h1>
         <p className="mt-6 rounded-xl border bg-surface px-4 py-8 text-center text-sm text-muted">
           현재 계정 상태에서는 글을 작성할 수 없습니다.
           <br />
@@ -33,8 +33,8 @@ export default async function WritePage({
   }
 
   return (
-    <div className="mx-auto max-w-2xl">
-      <h1 className="text-xl font-bold text-foreground">글쓰기</h1>
+    <div className="mx-auto max-w-[720px]">
+      <h1 className="text-[24px] font-semibold tracking-tight text-foreground">글쓰기</h1>
       <div className="mt-6">
         <PostForm
           mode="create"

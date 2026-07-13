@@ -6,7 +6,7 @@ import { Pencil, UserRound } from "lucide-react";
 import { cn, type Post } from "@actone/shared";
 import { EmptyState } from "@/components/empty-state";
 import { MemberLevelBadge } from "@/components/member-level-badge";
-import { PostCard } from "@/components/post-card";
+import { CommunityPostRow } from "@/components/post-row";
 import { buttonStyles } from "@/components/ui/button";
 import { attachRelations, getUserAndProfile } from "@/lib/data";
 
@@ -65,9 +65,9 @@ export default async function MyPage({
   const withRelations = await attachRelations(posts);
 
   return (
-    <div className="mx-auto max-w-3xl space-y-6">
-      {/* profile card */}
-      <div className="rounded-xl border bg-surface p-5">
+    <div className="mx-auto max-w-[860px] space-y-6">
+      {/* profile — 커뮤니티 정체성, 포트폴리오 아님 */}
+      <div className="border-b pb-7">
         <div className="flex items-start justify-between gap-4">
           <div className="flex items-center gap-4">
             {profile.avatar_url ? (
@@ -85,7 +85,9 @@ export default async function MyPage({
             )}
             <div>
               <div className="flex items-center gap-2">
-                <p className="text-lg font-bold text-foreground">{profile.nickname}</p>
+                <p className="text-[22px] font-semibold tracking-tight text-foreground">
+                  {profile.nickname}
+                </p>
                 <MemberLevelBadge level={profile.member_level} />
               </div>
               <p className="mt-1 text-sm text-muted">
@@ -101,20 +103,20 @@ export default async function MyPage({
           </Link>
         </div>
         {profile.bio ? (
-          <p className="mt-4 whitespace-pre-wrap text-sm leading-relaxed text-muted">
+          <p className="mt-4 max-w-xl whitespace-pre-wrap text-sm leading-[1.75] text-muted">
             {profile.bio}
           </p>
         ) : null}
       </div>
 
       {/* tabs */}
-      <div className="flex gap-1 border-b">
+      <div className="flex gap-5 border-b">
         {TABS.map((t) => (
           <Link
             key={t.value}
             href={`/me?tab=${t.value}`}
             className={cn(
-              "border-b-2 px-4 py-2.5 text-sm",
+              "border-b-2 pb-2.5 text-sm transition-colors duration-150",
               tab === t.value
                 ? "border-accent font-medium text-foreground"
                 : "border-transparent text-muted hover:text-foreground",
@@ -125,9 +127,9 @@ export default async function MyPage({
         ))}
       </div>
 
-      <div className="space-y-3">
+      <div>
         {withRelations.length > 0 ? (
-          withRelations.map((post) => <PostCard key={post.id} post={post} />)
+          withRelations.map((post) => <CommunityPostRow key={post.id} post={post} />)
         ) : (
           <EmptyState
             title={

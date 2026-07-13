@@ -4,12 +4,13 @@
 
 ## 사용자 사이트 (apps/web)
 
-- ✅ `/` 랜딩 (Hero, 존재 이유, 나눌 수 있는 것, 대상, 미리보기 카드, CTA, 푸터)
+- ✅ `/` 랜딩 — V3 스포트라이트 히어로(빈 무대, CSS 전용) + 모임 중심 구성
+  (히어로 → 오프라인 모임 밴드 → 게시판/이야기 미리보기 → 존재 이유 → 등급·안전 → CTA)
 - ✅ `/about`, `/guidelines`
 - ✅ `/login` 카카오 전용 (이메일/비밀번호 UI 없음)
 - ✅ `/auth/callback` (프로필 보장 + 온보딩 분기)
 - ✅ `/onboarding` (닉네임/상태/분야/지역/기대 — RHF+zod)
-- ✅ `/community` 홈 (공지 상단만, 오늘의 질문, 카테고리 카드 8개, 인기/최신)
+- ✅ `/community` 홈 (공지 상단만, 데스크톱 피드+300px 우측 레일, 모임 하이라이트, 오늘의 질문, 인기/최신 행 목록)
 - ✅ `/community/[categorySlug]` (설명, 검색, 정렬 4종, 페이지네이션, 후기방 경고)
 - ✅ `/posts/[postId]` (배지, 조회수, 좋아요/북마크/신고, 댓글, 작성자 수정/삭제, 모임 상세+링크 게이트)
 - ✅ `/write`, `/edit/[postId]` (검증 규칙, 모임 필드, 카테고리 헬퍼 문구, 익명 토글 없음)
@@ -68,9 +69,21 @@
 - ✅ 소셜 5종(인스타그램/카카오채널/스레드/틱톡/유튜브) 사업자 정보 아래 표시, 설정은 siteConfig
 - ✅ 모바일 푸터 레이아웃(하단 내비와 겹침 방지 padding)
 
-## 빌드 / 린트 (2026-07-07 실행 결과)
+## 디자인 시스템 (2026-07-08, V3 SPOTLIGHT 맨데이트)
 
-- ✅ `npm run lint` — 워크스페이스 전체 통과 (에러/경고 0)
-- ✅ `npm run build` — apps/web 16 라우트, apps/admin 20 라우트 모두 컴파일 성공
+- ✅ V3 팔레트 토큰 적용 — 사용자(잉크 #111112 / 액센트 #E8662A / 종이 밴드), 관리자(라이트 #F5F4F1 / #D85B25)
+- ✅ 빈 무대 스포트라이트 히어로 — CSS 레이어 5장(`.stage*`), 이미지·AI 스톡 없음
+- ✅ 에디토리얼 문법 — 괘선 행 기반 게시판(`CommunityPostRow`), 번호 인덱스, 비대칭 2단, 카드 그리드 제거
+- ✅ 시맨틱 컴포넌트 — CommunityPostRow / FeaturedMeetup / CategoryIndex / CommunitySidebar
+- ✅ 관리자 라이트 운영 UI로 사용자 사이트와 분리
+- ✅ 접근성 — focus-visible, keep-all, reduced-motion, 라벨/aria, 대비 AA
+- ✅ 문서 — ACTONE_DESIGN_SYSTEM.md / ACTONE_PAGE_SPECS.md / ACTONE_DESIGN_QA.md
+- ✅ 비주얼 QA — 390/768/1440 × 9페이지 스크린샷(docs/design-screenshots/), 발견 문제 6건 수정 (QA 문서 참고)
+- ✅ CLAUDE.md(≤200줄) + .claude/rules 4종 + .claude/agents 4종 (V2 추가 요청)
+
+## 빌드 / 린트 (2026-07-08 실행 결과)
+
+- ✅ `npm run lint` — 워크스페이스 전체 통과 (에러/경고 0, exit 0)
+- ✅ `npm run build` — apps/web 16 라우트, apps/admin 20 라우트 모두 컴파일 성공 (exit 0)
 - ✅ 마이그레이션/RLS 로컬 Postgres 검증 — `supabase/tests/README.md` (PASS 26 / FAIL 0)
 - ✅ **브라우저 E2E 49/49 PASS** — 실제 앱을 Playwright로 구동(로컬 Supabase 호환 스택), `e2e/README.md` 참고. 게스트 차단, 온보딩, 글/댓글/좋아요/북마크/신고/검색, 모임 링크 게이팅(URL이 DOM에 미노출), 자료 제보 승인 플로우, 관리자 접근 제어/등급 변경까지 화면 단위로 검증 (2026-07-07)

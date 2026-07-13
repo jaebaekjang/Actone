@@ -5,7 +5,7 @@ import {
   type Post,
 } from "@actone/shared";
 import { EmptyState } from "@/components/empty-state";
-import { PostCard } from "@/components/post-card";
+import { CommunityPostRow } from "@/components/post-row";
 import { SearchInput } from "@/components/search-input";
 import { attachRelations } from "@/lib/data";
 import { createClient } from "@/lib/supabase";
@@ -50,8 +50,10 @@ export default async function SearchPage({
   }
 
   return (
-    <div className="mx-auto max-w-3xl space-y-5">
-      <h1 className="text-xl font-bold text-foreground">검색</h1>
+    <div className="mx-auto max-w-[860px] space-y-5">
+      <h1 className="text-[24px] font-semibold tracking-tight text-foreground md:text-[28px]">
+        검색
+      </h1>
       <SearchInput defaultValue={term} />
 
       {term ? (
@@ -59,10 +61,10 @@ export default async function SearchPage({
           <p className="text-sm text-muted">
             &lsquo;{term}&rsquo; 검색 결과 {posts.length}건
           </p>
-          <div className="space-y-3">
+          <div className={posts.length > 0 ? "border-t" : undefined}>
             {posts.length > 0 ? (
               posts.map((post) => (
-                <PostCard key={post.id} post={post} meetup={meetupMap.get(post.id)} />
+                <CommunityPostRow key={post.id} post={post} meetup={meetupMap.get(post.id)} />
               ))
             ) : (
               <EmptyState

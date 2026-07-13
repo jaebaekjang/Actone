@@ -81,7 +81,7 @@ export default async function AdminDashboardPage() {
           <Link key={stat.label} href={stat.href}>
             <Card className="p-4 transition-colors hover:border-accent/40">
               <p className="text-xs text-muted">{stat.label}</p>
-              <p className="mt-1 text-2xl font-bold text-foreground">{stat.value}</p>
+              <p className="tnum mt-1 text-2xl font-bold text-foreground">{stat.value}</p>
             </Card>
           </Link>
         ))}

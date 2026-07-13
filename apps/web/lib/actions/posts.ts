@@ -188,9 +188,21 @@ export async function updatePost(
     );
   }
 
-  // replace image set (uploaded files removed from the form are kept in
-  // storage but no longer referenced — acceptable for MVP)
+  // replace image set + remove dropped files from storage
   const imageUrls = parseImageUrls(formData);
+  const { data: previousImages } = await supabase
+    .from("post_images")
+    .select("image_url")
+    .eq("post_id", postId);
+  const removedPaths = ((previousImages as { image_url: string }[] | null) ?? [])
+    .map((row) => row.image_url)
+    .filter((url) => !imageUrls.includes(url))
+    .map((url) => url.split("/post-images/")[1])
+    .filter((path): path is string => !!path);
+  if (removedPaths.length > 0) {
+    // storage policy only allows deleting the author's own uploads
+    await supabase.storage.from("post-images").remove(removedPaths);
+  }
   await supabase.from("post_images").delete().eq("post_id", postId);
   if (imageUrls.length > 0) {
     await supabase.from("post_images").insert(

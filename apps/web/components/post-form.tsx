@@ -188,12 +188,12 @@ export function PostForm({
         <WarningBox>{FIELD_REVIEW_WARNING}</WarningBox>
       ) : null}
       {selectedCategory?.slug === CATEGORY_SLUGS.auditionInfo ? (
-        <p className="rounded-lg border bg-surface px-4 py-3 text-sm leading-relaxed text-muted">
+        <p className="border-l-2 border-line bg-surface px-4 py-3 text-sm leading-relaxed text-muted">
           {AUDITION_HELPER}
         </p>
       ) : null}
       {selectedCategory?.slug === CATEGORY_SLUGS.study ? (
-        <p className="rounded-lg border bg-surface px-4 py-3 text-sm leading-relaxed text-muted">
+        <p className="border-l-2 border-line bg-surface px-4 py-3 text-sm leading-relaxed text-muted">
           {STUDY_HELPER}
         </p>
       ) : null}
@@ -259,10 +259,10 @@ export function PostForm({
       </div>
 
       {isMeetup ? (
-        <fieldset className="space-y-4 rounded-xl border bg-surface p-4">
-          <legend className="px-1 text-sm font-semibold text-foreground">
+        <section aria-labelledby="meetup-info-heading" className="space-y-4 border-t pt-5">
+          <h2 id="meetup-info-heading" className="text-sm font-semibold text-foreground">
             오프라인 모임 정보
-          </legend>
+          </h2>
           <div className="grid gap-4 sm:grid-cols-2">
             <div>
               <Label htmlFor="meetup_region">지역</Label>
@@ -304,15 +304,15 @@ export function PostForm({
           <label className="flex items-center gap-2 text-sm text-foreground">
             <input
               type="checkbox"
-              className="accent-[#f97316]"
+              className="accent-accent"
               {...form.register("meetup_regular_only")}
             />
             정회원 전용 모임
           </label>
-        </fieldset>
+        </section>
       ) : null}
 
-      {serverError ? <p className="text-sm text-red-400">{serverError}</p> : null}
+      {serverError ? <p className="text-sm text-danger-soft">{serverError}</p> : null}
 
       <div className="flex justify-end gap-2">
         <Button type="submit" size="lg" disabled={pending || uploading}>

@@ -20,10 +20,9 @@ export function ConfirmButton({
   const [pending, startTransition] = useTransition();
 
   const tones = {
-    neutral: "border bg-surface-soft text-foreground hover:bg-surface-soft/70",
-    danger: "border border-red-800/60 bg-red-950/40 text-red-300 hover:bg-red-950/70",
-    positive:
-      "border border-emerald-700/60 bg-emerald-950/40 text-emerald-300 hover:bg-emerald-950/70",
+    neutral: "border bg-surface text-foreground hover:bg-surface-soft",
+    danger: "border border-danger/40 bg-danger/5 text-danger hover:bg-danger/10",
+    positive: "border border-success/40 bg-success/5 text-success hover:bg-success/10",
   } as const;
 
   return (

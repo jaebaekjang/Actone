@@ -16,7 +16,7 @@ export function DeletePostButton({ postId }: { postId: string }) {
           startTransition(() => deletePost(postId));
         }
       }}
-      className="inline-flex items-center gap-1 text-sm text-muted hover:text-red-400 disabled:opacity-60"
+      className="inline-flex items-center gap-1 text-sm text-muted hover:text-danger-soft disabled:opacity-60"
     >
       <Trash2 className="h-4 w-4" aria-hidden />
       삭제
@@ -41,7 +41,7 @@ export function DeleteCommentButton({
           startTransition(() => deleteComment(commentId, postId));
         }
       }}
-      className="text-xs text-muted hover:text-red-400 disabled:opacity-60"
+      className="text-xs text-muted hover:text-danger-soft disabled:opacity-60"
     >
       삭제
     </button>

@@ -1,19 +1,42 @@
 @import "tailwindcss";
 
+/*
+ * Act One design tokens — "백스테이지 라운지 + 독립 잡지 편집 디자인"
+ * See ACTONE_DESIGN_SYSTEM.md. Values come from the V3 design mandate.
+ */
 @theme {
   --font-sans: "Pretendard Variable", Pretendard, -apple-system, BlinkMacSystemFont,
     system-ui, Roboto, "Apple SD Gothic Neo", "Noto Sans KR", "Malgun Gothic", sans-serif;
 
-  /* dark theater palette */
-  --color-background: #0f0f10;
-  --color-surface: #18181b;
-  --color-surface-soft: #232326;
-  --color-foreground: #f4f4f5;
-  --color-muted: #a1a1aa;
-  --color-accent: #f97316;
-  --color-accent-soft: #fdba74;
-  --color-line: #2f2f33;
-  --color-gold: #eab308;
+  /* dark backstage surfaces */
+  --color-background: #111112; /* ink */
+  --color-surface: #181819; /* deep surface */
+  --color-surface-soft: #202022; /* raised surface */
+  --color-foreground: #f2f0ec;
+  --color-muted: #aaa7a1;
+  --color-line: #323033;
+
+  /* warm paper (light editorial band) */
+  --color-paper: #f2efe9;
+  --color-paper-ink: #1a1917;
+  --color-paper-muted: #68645e;
+  --color-paper-line: #d7d2c9;
+
+  /* single accent */
+  --color-accent: #e8662a;
+  --color-accent-hover: #cd5120;
+  --color-accent-soft: #efa079; /* accent-tinted text on dark surfaces */
+
+  /* status */
+  --color-success: #39825a;
+  --color-success-soft: #7dbb98;
+  --color-warning: #c58427;
+  --color-warning-soft: #d9ab62;
+  --color-danger: #b94a48;
+  --color-danger-soft: #dd9391;
+
+  /* identity */
+  --color-gold: #cfa45e; /* tutor mark */
   --color-kakao: #fee500;
 }
 
@@ -26,8 +49,168 @@
     color: var(--color-foreground);
     font-family: var(--font-sans);
     -webkit-font-smoothing: antialiased;
+    /* 한국어 단어 중간 줄바꿈 방지 — 긴 URL 등은 overflow-wrap이 처리 */
+    word-break: keep-all;
+    overflow-wrap: break-word;
   }
   * {
     border-color: var(--color-line);
+  }
+  ::selection {
+    background-color: color-mix(in srgb, var(--color-accent) 45%, transparent);
+    color: var(--color-foreground);
+  }
+  :focus-visible {
+    outline: 2px solid var(--color-accent);
+    outline-offset: 2px;
+  }
+  @media (prefers-reduced-motion: reduce) {
+    *,
+    *::before,
+    *::after {
+      animation-duration: 0.01ms !important;
+      transition-duration: 0.01ms !important;
+    }
+  }
+}
+
+@layer components {
+  /*
+   * Empty-stage spotlight hero.
+   * Layered CSS gradients only — no image, no neon, no smoke.
+   * .stage is the dark room, .stage-cone the overhead light shaft,
+   * .stage-pool the elliptical light pool on the floor,
+   * .stage-floor the boards + stage edge, .stage-grain fine noise.
+   */
+  .stage {
+    position: relative;
+    overflow: hidden;
+    background:
+      linear-gradient(180deg, #101011 0%, #131313 46%, #1a1817 78%, #141312 100%);
+  }
+  .stage > * {
+    position: relative;
+    z-index: 5;
+  }
+  .stage::before {
+    /* faint architectural depth: side curtains falling off into dark */
+    content: "";
+    position: absolute;
+    inset: 0;
+    z-index: 1;
+    background:
+      linear-gradient(90deg, rgba(0, 0, 0, 0.5) 0%, transparent 18%, transparent 82%, rgba(0, 0, 0, 0.5) 100%),
+      repeating-linear-gradient(
+        90deg,
+        rgba(255, 255, 255, 0.012) 0 3px,
+        transparent 3px 26px
+      );
+  }
+  .stage-cone {
+    position: absolute;
+    z-index: 2;
+    left: 50%;
+    top: 0;
+    width: min(680px, 88%);
+    height: 88%;
+    transform: translateX(-50%);
+    background: linear-gradient(
+      180deg,
+      rgba(255, 196, 138, 0.34) 0%,
+      rgba(255, 186, 126, 0.12) 42%,
+      rgba(255, 178, 118, 0.05) 72%,
+      transparent 100%
+    );
+    clip-path: polygon(46.5% 0%, 53.5% 0%, 84% 100%, 16% 100%);
+    filter: blur(22px);
+    pointer-events: none;
+  }
+  .stage-pool {
+    position: absolute;
+    z-index: 3;
+    left: 50%;
+    bottom: 4%;
+    width: min(760px, 96%);
+    height: 30%;
+    transform: translateX(-50%);
+    background: radial-gradient(
+      ellipse 50% 42% at 50% 62%,
+      rgba(255, 206, 150, 0.3) 0%,
+      rgba(250, 190, 132, 0.12) 48%,
+      rgba(240, 180, 124, 0.04) 68%,
+      transparent 78%
+    );
+    pointer-events: none;
+  }
+  .stage-floor {
+    position: absolute;
+    z-index: 2;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    height: 27%;
+    pointer-events: none;
+  }
+  .stage-floor::before {
+    /* stage edge */
+    content: "";
+    position: absolute;
+    inset: 0 0 auto 0;
+    height: 1px;
+    background: linear-gradient(
+      90deg,
+      transparent 8%,
+      rgba(255, 200, 145, 0.16) 35%,
+      rgba(255, 210, 155, 0.26) 50%,
+      rgba(255, 200, 145, 0.16) 65%,
+      transparent 92%
+    );
+  }
+  .stage-floor::after {
+    /* floorboards visible only inside the light pool */
+    content: "";
+    position: absolute;
+    inset: 0;
+    background: repeating-linear-gradient(
+      90deg,
+      rgba(255, 214, 165, 0.09) 0 1px,
+      transparent 1px 64px
+    );
+    mask-image: radial-gradient(ellipse 42% 70% at 50% 58%, black 12%, transparent 72%);
+    -webkit-mask-image: radial-gradient(ellipse 42% 70% at 50% 58%, black 12%, transparent 72%);
+  }
+  .stage-grain {
+    position: absolute;
+    inset: 0;
+    z-index: 4;
+    opacity: 0.05;
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='120' height='120'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='2'/%3E%3C/filter%3E%3Crect width='120' height='120' filter='url(%23n)' opacity='0.6'/%3E%3C/svg%3E");
+    pointer-events: none;
+  }
+
+  /* quiet spotlight echo for the final CTA band */
+  .stage-echo {
+    position: relative;
+    overflow: hidden;
+  }
+  .stage-echo::before {
+    content: "";
+    position: absolute;
+    inset: 0;
+    background: radial-gradient(
+      ellipse 46% 58% at 50% 118%,
+      rgba(255, 198, 140, 0.14) 0%,
+      rgba(255, 190, 130, 0.05) 55%,
+      transparent 78%
+    );
+    pointer-events: none;
+  }
+  .stage-echo > * {
+    position: relative;
+  }
+
+  /* tabular numerals where counts/dates align */
+  .tnum {
+    font-variant-numeric: tabular-nums;
   }
 }

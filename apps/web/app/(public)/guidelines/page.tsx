@@ -43,23 +43,32 @@ const RULES = [
 
 export default function GuidelinesPage() {
   return (
-    <div className="mx-auto max-w-3xl px-4 py-16">
-      <h1 className="text-2xl font-bold text-foreground">커뮤니티 이용수칙</h1>
-      <p className="mt-3 leading-relaxed text-muted">
+    <div className="mx-auto max-w-[760px] px-5 py-16 md:px-8 md:py-24">
+      <p className="text-sm font-medium text-accent-soft">이용수칙</p>
+      <h1 className="mt-3 text-[27px] font-semibold tracking-tight text-foreground md:text-[36px]">
+        커뮤니티 이용수칙
+      </h1>
+      <p className="mt-4 max-w-xl text-[15px] leading-[1.8] text-muted md:text-base">
         액트원은 인맥 없이 시작한 배우들이 안심하고 이야기할 수 있는 공간입니다.
         이 공간을 지키기 위해 아래 수칙을 꼭 지켜주세요.
       </p>
-      <ol className="mt-8 space-y-4">
+
+      <ol className="mt-12 border-t">
         {RULES.map((rule, i) => (
-          <li key={rule.title} className="rounded-xl border bg-surface p-5">
-            <p className="font-semibold text-foreground">
-              {i + 1}. {rule.title}
+          <li
+            key={rule.title}
+            className="grid gap-1.5 border-b py-6 md:grid-cols-[minmax(0,4fr)_minmax(0,8fr)] md:gap-8"
+          >
+            <p className="flex items-baseline gap-3 font-semibold text-foreground">
+              <span className="tnum text-xs text-muted/70">{String(i + 1).padStart(2, "0")}</span>
+              {rule.title}
             </p>
-            <p className="mt-1.5 text-sm leading-relaxed text-muted">{rule.desc}</p>
+            <p className="pl-8 text-sm leading-[1.75] text-muted md:pl-0">{rule.desc}</p>
           </li>
         ))}
       </ol>
-      <p className="mt-8 text-sm leading-relaxed text-muted">
+
+      <p className="mt-8 text-sm leading-[1.75] text-muted">
         수칙을 위반한 글과 댓글은 관리자에 의해 숨김 또는 삭제될 수 있으며,
         반복 위반 시 계정 이용이 제한될 수 있습니다.
       </p>

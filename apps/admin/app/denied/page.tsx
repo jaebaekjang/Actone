@@ -7,7 +7,7 @@ export const metadata: Metadata = { title: "접근 권한 없음" };
 export default function DeniedPage() {
   return (
     <div className="mx-auto flex min-h-screen max-w-sm flex-col items-center justify-center px-4 text-center">
-      <ShieldAlert className="h-10 w-10 text-red-400" aria-hidden />
+      <ShieldAlert className="h-10 w-10 text-danger" aria-hidden />
       <h1 className="mt-4 text-xl font-bold text-foreground">
         접근 권한이 없습니다.
       </h1>

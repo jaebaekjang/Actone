@@ -8,9 +8,9 @@ import type {
 } from "react";
 
 const buttonVariants = {
-  primary: "bg-accent text-white hover:bg-accent/90",
-  secondary: "border bg-surface-soft text-foreground hover:bg-surface-soft/70",
-  danger: "bg-red-800 text-white hover:bg-red-700",
+  primary: "bg-accent text-white hover:bg-accent-hover",
+  secondary: "border bg-surface text-foreground hover:bg-surface-soft",
+  danger: "bg-danger text-white hover:bg-danger/85",
   ghost: "text-muted hover:bg-surface-soft hover:text-foreground",
 } as const;
 
@@ -91,9 +91,9 @@ export function StatusBadge({
   tone: "positive" | "warning" | "negative" | "neutral";
 }) {
   const tones = {
-    positive: "border-emerald-600/50 bg-emerald-500/10 text-emerald-300",
-    warning: "border-amber-600/50 bg-amber-500/10 text-amber-300",
-    negative: "border-red-700/50 bg-red-500/10 text-red-300",
+    positive: "border-success/40 bg-success/10 text-success",
+    warning: "border-warning/40 bg-warning/10 text-warning",
+    negative: "border-danger/40 bg-danger/10 text-danger",
     neutral: "border bg-surface-soft text-muted",
   } as const;
   return (
