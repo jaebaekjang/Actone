@@ -18,6 +18,17 @@ export interface Profile {
   member_level_updated_at: string | null;
   member_level_updated_by: string | null;
   member_level_note: string | null;
+  suspended_until: string | null;
+  suspend_reason: string | null;
+  warning_count: number;
+  last_active_at: string | null;
+  marketing_opt_in: boolean;
+  utm_source: string | null;
+  utm_medium: string | null;
+  utm_campaign: string | null;
+  utm_content: string | null;
+  utm_term: string | null;
+  referrer: string | null;
   created_at: string;
   updated_at: string;
 }
@@ -36,7 +47,52 @@ export interface AdminUser {
   user_id: string;
   email: string | null;
   is_active: boolean;
+  role_key: string;
+  last_login_at: string | null;
   created_by: string | null;
+  created_at: string;
+  updated_at: string;
+}
+
+export interface AdminRole {
+  id: string;
+  key: string;
+  label: string;
+  description: string | null;
+  is_system: boolean;
+  sort_order: number;
+  created_at: string;
+  updated_at: string;
+}
+
+export interface AdminPermissionRow {
+  id: string;
+  key: string;
+  label: string;
+  category: string;
+  sort_order: number;
+}
+
+export interface AdminActivityLog {
+  id: string;
+  admin_id: string | null;
+  action: string;
+  target_type: string | null;
+  target_id: string | null;
+  summary: string | null;
+  before_data: unknown;
+  after_data: unknown;
+  ip: string | null;
+  user_agent: string | null;
+  created_at: string;
+}
+
+export interface AdminNote {
+  id: string;
+  target_type: string;
+  target_id: string;
+  author_id: string | null;
+  body: string;
   created_at: string;
   updated_at: string;
 }
@@ -48,6 +104,16 @@ export interface Category {
   description: string | null;
   sort_order: number;
   is_active: boolean;
+  icon: string | null;
+  intro: string | null;
+  cover_image_url: string | null;
+  read_level: "guest" | "new_member" | "regular_member" | "tutor";
+  write_level: "new_member" | "regular_member" | "tutor" | "admin";
+  comment_level: "new_member" | "regular_member" | "tutor" | "admin";
+  requires_approval: boolean;
+  is_anonymous: boolean;
+  max_images: number;
+  allow_tags: boolean;
   created_at: string;
   updated_at: string;
 }

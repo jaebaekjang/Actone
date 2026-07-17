@@ -11,8 +11,9 @@ import {
   regularMemberRuleSchema,
   type MemberLevel,
 } from "@actone/shared";
+import { ADMIN_ROLE_LABELS } from "@actone/shared";
 import { createClient } from "./supabase";
-import { requireAdmin } from "./admin";
+import { logActivity, requirePermission } from "./admin";
 
 export async function signOut() {
   const supabase = await createClient();
@@ -33,7 +34,7 @@ export async function setMemberLevel(
   _prev: ActionState,
   formData: FormData,
 ): Promise<ActionState> {
-  const { supabase, user } = await requireAdmin();
+  const { supabase, user } = await requirePermission("members.level");
 
   const level = formData.get("member_level") as MemberLevel;
   const reason = ((formData.get("reason") as string) ?? "").trim();
@@ -43,7 +44,7 @@ export async function setMemberLevel(
 
   const { data: target } = await supabase
     .from("profiles")
-    .select("member_level")
+    .select("member_level, nickname")
     .eq("id", userId)
     .maybeSingle();
   if (!target) return { error: "회원을 찾을 수 없습니다." };
@@ -71,19 +72,42 @@ export async function setMemberLevel(
     reason: reason || null,
   });
 
+  await logActivity({
+    action: "member.level_change",
+    targetType: "profile",
+    targetId: userId,
+    summary: `${target.nickname ?? userId.slice(0, 8)}: ${target.member_level} → ${level}`,
+    before: { member_level: target.member_level },
+    after: { member_level: level, reason: reason || null },
+  });
+
   revalidatePath(`/members/${userId}`);
   revalidatePath("/members");
   return { success: "회원 등급이 변경되었습니다." };
 }
 
 export async function setSuspension(userId: string, suspend: boolean): Promise<void> {
-  const { supabase, user } = await requireAdmin();
+  const { supabase, user } = await requirePermission("members.suspend");
   if (userId === user.id) return;
+
+  const { data: target } = await supabase
+    .from("profiles")
+    .select("nickname")
+    .eq("id", userId)
+    .maybeSingle();
 
   await supabase
     .from("profiles")
     .update({ is_suspended: suspend })
     .eq("id", userId);
+
+  await logActivity({
+    action: suspend ? "member.suspend" : "member.unsuspend",
+    targetType: "profile",
+    targetId: userId,
+    summary: `${target?.nickname ?? userId.slice(0, 8)} ${suspend ? "정지" : "정지 해제"}`,
+    after: { is_suspended: suspend },
+  });
 
   revalidatePath(`/members/${userId}`);
   revalidatePath("/members");
@@ -96,7 +120,7 @@ export async function saveRegularMemberRule(
   _prev: ActionState,
   formData: FormData,
 ): Promise<ActionState> {
-  const { supabase } = await requireAdmin();
+  const { supabase } = await requirePermission("members.level");
 
   const parsed = regularMemberRuleSchema.safeParse({
     enabled: formData.get("enabled") === "on",
@@ -117,6 +141,14 @@ export async function saveRegularMemberRule(
     );
   if (error) return { error: "설정 저장에 실패했습니다." };
 
+  await logActivity({
+    action: "settings.update",
+    targetType: "app_settings",
+    targetId: "regular_member_rule",
+    summary: `자동 승급 규칙 ${parsed.data.enabled ? "ON" : "OFF"}`,
+    after: parsed.data,
+  });
+
   revalidatePath("/settings");
   return { success: "설정이 저장되었습니다." };
 }
@@ -128,15 +160,29 @@ export async function setPostStatus(
   postId: string,
   status: "published" | "hidden" | "deleted",
 ): Promise<void> {
-  const { supabase } = await requireAdmin();
+  const { supabase } = await requirePermission("community.manage");
   await supabase.from("posts").update({ status }).eq("id", postId);
+  await logActivity({
+    action: "post.status_change",
+    targetType: "post",
+    targetId: postId,
+    summary: `게시글 상태 → ${status}`,
+    after: { status },
+  });
   revalidatePath("/posts");
   revalidatePath("/notices");
 }
 
 export async function setPostPinned(postId: string, pinned: boolean): Promise<void> {
-  const { supabase } = await requireAdmin();
+  const { supabase } = await requirePermission("community.manage");
   await supabase.from("posts").update({ is_pinned: pinned }).eq("id", postId);
+  await logActivity({
+    action: "post.pin",
+    targetType: "post",
+    targetId: postId,
+    summary: pinned ? "게시글 상단 고정" : "게시글 고정 해제",
+    after: { is_pinned: pinned },
+  });
   revalidatePath("/posts");
   revalidatePath("/notices");
 }
@@ -145,8 +191,15 @@ export async function setCommentStatus(
   commentId: string,
   status: "published" | "hidden" | "deleted",
 ): Promise<void> {
-  const { supabase } = await requireAdmin();
+  const { supabase } = await requirePermission("community.manage");
   await supabase.from("comments").update({ status }).eq("id", commentId);
+  await logActivity({
+    action: "comment.status_change",
+    targetType: "comment",
+    targetId: commentId,
+    summary: `댓글 상태 → ${status}`,
+    after: { status },
+  });
   revalidatePath("/comments");
 }
 
@@ -158,7 +211,7 @@ export async function resolveReport(
   _prev: ActionState,
   formData: FormData,
 ): Promise<ActionState> {
-  const { supabase } = await requireAdmin();
+  const { supabase } = await requirePermission("reports.manage");
 
   const decision = formData.get("decision") as string;
   const adminNote = ((formData.get("admin_note") as string) ?? "").trim();
@@ -190,6 +243,14 @@ export async function resolveReport(
     await supabase.from(table).update({ status: "hidden" }).eq("id", report.target_id);
   }
 
+  await logActivity({
+    action: "report.resolve",
+    targetType: "report",
+    targetId: reportId,
+    summary: `신고 ${decision === "resolved" ? "해결" : "기각"}${hideTarget && decision === "resolved" ? " · 대상 숨김" : ""}`,
+    after: { status: decision, hideTarget },
+  });
+
   revalidatePath("/reports");
   revalidatePath(`/reports/${reportId}`);
   return { success: "신고가 처리되었습니다." };
@@ -203,7 +264,7 @@ export async function reviewSubmission(
   _prev: ActionState,
   formData: FormData,
 ): Promise<ActionState> {
-  const { supabase, user } = await requireAdmin();
+  const { supabase, user } = await requirePermission("resource.manage");
 
   const decision = formData.get("decision") as string;
   const adminNote = ((formData.get("admin_note") as string) ?? "").trim();
@@ -256,6 +317,14 @@ export async function reviewSubmission(
     .eq("id", submissionId);
   if (error) return { error: "제보 처리에 실패했습니다." };
 
+  await logActivity({
+    action: "submission.review",
+    targetType: "resource_submission",
+    targetId: submissionId,
+    summary: `${submission.title}: ${decision === "approved" ? "승인" : "반려"}`,
+    after: { status: decision },
+  });
+
   revalidatePath("/submissions");
   revalidatePath(`/submissions/${submissionId}`);
   return {
@@ -271,7 +340,7 @@ export async function saveNotice(
   _prev: ActionState,
   formData: FormData,
 ): Promise<ActionState> {
-  const { supabase, user } = await requireAdmin();
+  const { supabase, user } = await requirePermission("community.manage");
 
   const parsed = noticeSchema.safeParse({
     title: formData.get("title"),
@@ -312,6 +381,13 @@ export async function saveNotice(
     if (error) return { error: "공지 작성에 실패했습니다." };
   }
 
+  await logActivity({
+    action: "notice.save",
+    targetType: "post",
+    targetId: postId,
+    summary: `${postId ? "공지 수정" : "공지 작성"}: ${parsed.data.title}`,
+  });
+
   revalidatePath("/notices");
   redirect("/notices");
 }
@@ -324,7 +400,7 @@ export async function updateCategory(
   _prev: ActionState,
   formData: FormData,
 ): Promise<ActionState> {
-  const { supabase } = await requireAdmin();
+  const { supabase } = await requirePermission("community.manage");
 
   const parsed = categoryEditSchema.safeParse({
     name: formData.get("name"),
@@ -347,6 +423,14 @@ export async function updateCategory(
     .eq("id", categoryId);
   if (error) return { error: "카테고리 수정에 실패했습니다." };
 
+  await logActivity({
+    action: "category.update",
+    targetType: "category",
+    targetId: categoryId,
+    summary: `게시판 수정: ${parsed.data.name}`,
+    after: parsed.data,
+  });
+
   revalidatePath("/categories");
   return { success: "카테고리가 수정되었습니다." };
 }
@@ -358,11 +442,11 @@ export async function toggleAdminActive(
   adminUserId: string,
   active: boolean,
 ): Promise<void> {
-  const { supabase, user } = await requireAdmin();
+  const { supabase, user } = await requirePermission("system.admins");
 
   const { data: row } = await supabase
     .from("admin_users")
-    .select("user_id")
+    .select("user_id, email")
     .eq("id", adminUserId)
     .maybeSingle();
   // never deactivate your own access (lockout guard)
@@ -373,6 +457,14 @@ export async function toggleAdminActive(
     .update({ is_active: active })
     .eq("id", adminUserId);
 
+  await logActivity({
+    action: "admin.toggle_active",
+    targetType: "admin_user",
+    targetId: adminUserId,
+    summary: `${row.email ?? adminUserId.slice(0, 8)} ${active ? "활성화" : "비활성화"}`,
+    after: { is_active: active },
+  });
+
   revalidatePath("/admins");
 }
 
@@ -380,7 +472,7 @@ export async function addAdminByEmail(
   _prev: ActionState,
   formData: FormData,
 ): Promise<ActionState> {
-  const { supabase, user } = await requireAdmin();
+  const { supabase, user } = await requirePermission("system.admins");
 
   const email = ((formData.get("email") as string) ?? "").trim();
   if (!email) return { error: "이메일을 입력해주세요." };
@@ -411,6 +503,62 @@ export async function addAdminByEmail(
   );
   if (error) return { error: "관리자 등록에 실패했습니다." };
 
+  await logActivity({
+    action: "admin.add",
+    targetType: "admin_user",
+    targetId: target.id,
+    summary: `관리자 등록: ${email}`,
+  });
+
   revalidatePath("/admins");
   return { success: "관리자로 등록되었습니다." };
+}
+
+// ---------------------------------------------------------------------------
+// admin roles (RBAC)
+// ---------------------------------------------------------------------------
+export async function setAdminRole(
+  adminUserId: string,
+  _prev: ActionState,
+  formData: FormData,
+): Promise<ActionState> {
+  const { supabase, user } = await requirePermission("system.roles");
+
+  const roleKey = ((formData.get("role_key") as string) ?? "").trim();
+  if (!ADMIN_ROLE_LABELS[roleKey]) {
+    return { error: "올바른 역할이 아닙니다." };
+  }
+
+  const { data: row } = await supabase
+    .from("admin_users")
+    .select("user_id, email, role_key")
+    .eq("id", adminUserId)
+    .maybeSingle();
+  if (!row) return { error: "관리자를 찾을 수 없습니다." };
+  // guard against self-lockout: can't drop your own super_admin role
+  if (row.user_id === user.id && row.role_key === "super_admin" && roleKey !== "super_admin") {
+    return { error: "본인의 최고관리자 역할은 변경할 수 없습니다." };
+  }
+  if (row.role_key === roleKey) {
+    return { error: "이미 해당 역할입니다." };
+  }
+
+  const { error } = await supabase
+    .from("admin_users")
+    .update({ role_key: roleKey })
+    .eq("id", adminUserId);
+  if (error) return { error: "역할 변경에 실패했습니다." };
+
+  await logActivity({
+    action: "admin.role_change",
+    targetType: "admin_user",
+    targetId: adminUserId,
+    summary: `${row.email ?? adminUserId.slice(0, 8)}: ${ADMIN_ROLE_LABELS[row.role_key] ?? row.role_key} → ${ADMIN_ROLE_LABELS[roleKey]}`,
+    before: { role_key: row.role_key },
+    after: { role_key: roleKey },
+  });
+
+  revalidatePath("/system/roles");
+  revalidatePath("/admins");
+  return { success: "역할이 변경되었습니다." };
 }

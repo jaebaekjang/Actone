@@ -48,6 +48,7 @@ NEXT_PUBLIC_ADMIN_SITE_URL=https://admin.actone.kr
    - `supabase/migrations/0001_schema.sql`
    - `supabase/migrations/0002_rls.sql`
    - `supabase/migrations/0003_post_images.sql`
+   - `supabase/migrations/0004_admin_superadmin.sql` (관리자 RBAC·활동로그·운영 컬럼 확장)
    - `supabase/seed.sql`
    (또는 Supabase CLI: `supabase db push` 후 `supabase db seed`)
 3. Storage의 `avatars`, `post-images` 버킷은 마이그레이션이 생성합니다(공개 읽기).

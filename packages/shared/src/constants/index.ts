@@ -15,6 +15,95 @@ export const ROLE_LABELS: Record<Role, string> = {
   admin: "관리자",
 };
 
+// ---------------------------------------------------------------------------
+// admin RBAC (must match supabase/migrations/0004_admin_superadmin.sql)
+// ---------------------------------------------------------------------------
+export const ADMIN_PERMISSIONS = [
+  "dashboard.view",
+  "members.view",
+  "members.manage",
+  "members.level",
+  "members.suspend",
+  "members.pii",
+  "members.export",
+  "community.view",
+  "community.manage",
+  "reports.manage",
+  "audition.manage",
+  "meetup.view",
+  "meetup.manage",
+  "meetup.pii",
+  "resource.manage",
+  "notification.send",
+  "site.manage",
+  "seo.manage",
+  "marketing.manage",
+  "data.manage",
+  "automation.manage",
+  "system.admins",
+  "system.roles",
+  "system.logs",
+  "system.external",
+] as const;
+
+export type AdminPermission = (typeof ADMIN_PERMISSIONS)[number];
+
+export const ADMIN_PERMISSION_LABELS: Record<AdminPermission, string> = {
+  "dashboard.view": "대시보드 조회",
+  "members.view": "회원 조회",
+  "members.manage": "회원 정보 수정",
+  "members.level": "회원 등급 변경",
+  "members.suspend": "회원 정지/해제",
+  "members.pii": "회원 개인정보 조회",
+  "members.export": "회원 CSV 다운로드",
+  "community.view": "게시판/게시글 조회",
+  "community.manage": "게시판/게시글/댓글 관리",
+  "reports.manage": "신고 처리",
+  "audition.manage": "오디션 게시판 관리",
+  "meetup.view": "모임 조회",
+  "meetup.manage": "모임/신청자 관리",
+  "meetup.pii": "신청자 개인정보 조회",
+  "resource.manage": "자료실 승인/반려",
+  "notification.send": "알림/메시지 발송",
+  "site.manage": "사이트 CMS/디자인",
+  "seo.manage": "SEO 설정",
+  "marketing.manage": "마케팅/픽셀/분석",
+  "data.manage": "데이터/구글시트/내보내기",
+  "automation.manage": "자동화 규칙",
+  "system.admins": "관리자 계정 관리",
+  "system.roles": "역할/권한 관리",
+  "system.logs": "관리자 활동 로그",
+  "system.external": "외부 코드 관리",
+};
+
+export const ADMIN_ROLE_LABELS: Record<string, string> = {
+  super_admin: "최고관리자",
+  member_admin: "회원 관리자",
+  community_admin: "커뮤니티 관리자",
+  audition_admin: "오디션 게시판 관리자",
+  meetup_admin: "오프라인 모임 관리자",
+  resource_admin: "자료 관리자",
+  marketing_admin: "마케팅 관리자",
+  viewer: "데이터 조회 전용",
+};
+
+export const ADMIN_ACTIVITY_ACTION_LABELS: Record<string, string> = {
+  "member.level_change": "회원 등급 변경",
+  "member.suspend": "회원 정지",
+  "member.unsuspend": "회원 정지 해제",
+  "post.status_change": "게시글 상태 변경",
+  "post.pin": "게시글 고정 변경",
+  "comment.status_change": "댓글 상태 변경",
+  "report.resolve": "신고 처리",
+  "submission.review": "자료 제보 처리",
+  "notice.save": "공지 작성/수정",
+  "category.update": "카테고리 수정",
+  "admin.toggle_active": "관리자 활성/비활성",
+  "admin.add": "관리자 등록",
+  "admin.role_change": "관리자 역할 변경",
+  "settings.update": "설정 변경",
+};
+
 export const ACTOR_STATUS_OPTIONS = [
   "배우 지망생",
   "활동 중인 배우",
