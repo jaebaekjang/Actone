@@ -13,7 +13,7 @@ import {
 } from "@actone/shared";
 import { ADMIN_ROLE_LABELS } from "@actone/shared";
 import { createClient } from "./supabase";
-import { logActivity, requirePermission } from "./admin";
+import { logActivity, requireAdmin, requirePermission } from "./admin";
 
 export async function signOut() {
   const supabase = await createClient();
@@ -111,6 +111,121 @@ export async function setSuspension(userId: string, suspend: boolean): Promise<v
 
   revalidatePath(`/members/${userId}`);
   revalidatePath("/members");
+}
+
+export async function addWarning(
+  userId: string,
+  _prev: ActionState,
+  formData: FormData,
+): Promise<ActionState> {
+  const { supabase, user } = await requirePermission("members.suspend");
+  const reason = ((formData.get("reason") as string) ?? "").trim();
+  if (!reason) return { error: "경고 사유를 입력해주세요." };
+
+  const { data: target } = await supabase
+    .from("profiles")
+    .select("nickname, warning_count")
+    .eq("id", userId)
+    .maybeSingle();
+  if (!target) return { error: "회원을 찾을 수 없습니다." };
+
+  const next = (target.warning_count ?? 0) + 1;
+  const { error } = await supabase
+    .from("profiles")
+    .update({ warning_count: next })
+    .eq("id", userId);
+  if (error) return { error: "경고 처리에 실패했습니다." };
+
+  await supabase.from("admin_notes").insert({
+    target_type: "profile",
+    target_id: userId,
+    author_id: user.id,
+    body: `[경고 ${next}회] ${reason}`,
+  });
+
+  await logActivity({
+    action: "member.warn",
+    targetType: "profile",
+    targetId: userId,
+    summary: `${target.nickname ?? userId.slice(0, 8)} 경고 (누적 ${next}회): ${reason}`,
+    after: { warning_count: next },
+  });
+
+  revalidatePath(`/members/${userId}`);
+  return { success: `경고가 부여되었습니다. (누적 ${next}회)` };
+}
+
+export async function setTimedSuspension(
+  userId: string,
+  _prev: ActionState,
+  formData: FormData,
+): Promise<ActionState> {
+  const { supabase, user } = await requirePermission("members.suspend");
+  if (userId === user.id) return { error: "본인 계정은 정지할 수 없습니다." };
+
+  const reason = ((formData.get("reason") as string) ?? "").trim();
+  const days = Number(formData.get("days"));
+  if (!Number.isFinite(days) || days < 0 || days > 3650) {
+    return { error: "정지 기간이 올바르지 않습니다." };
+  }
+
+  // days = 0 → 영구 정지 (suspended_until = null)
+  const until =
+    days > 0 ? new Date(Date.now() + days * 86_400_000).toISOString() : null;
+
+  const { data: target } = await supabase
+    .from("profiles")
+    .select("nickname")
+    .eq("id", userId)
+    .maybeSingle();
+  if (!target) return { error: "회원을 찾을 수 없습니다." };
+
+  const { error } = await supabase
+    .from("profiles")
+    .update({
+      is_suspended: true,
+      suspended_until: until,
+      suspend_reason: reason || null,
+    })
+    .eq("id", userId);
+  if (error) return { error: "정지 처리에 실패했습니다." };
+
+  await logActivity({
+    action: "member.suspend",
+    targetType: "profile",
+    targetId: userId,
+    summary: `${target.nickname ?? userId.slice(0, 8)} ${days > 0 ? `${days}일 정지` : "영구 정지"}${reason ? `: ${reason}` : ""}`,
+    after: { is_suspended: true, suspended_until: until, suspend_reason: reason || null },
+  });
+
+  revalidatePath(`/members/${userId}`);
+  revalidatePath("/members");
+  return { success: days > 0 ? `${days}일간 정지되었습니다.` : "영구 정지되었습니다." };
+}
+
+// ---------------------------------------------------------------------------
+// admin notes (operator memos on any entity)
+// ---------------------------------------------------------------------------
+export async function addAdminNote(
+  targetType: string,
+  targetId: string,
+  _prev: ActionState,
+  formData: FormData,
+): Promise<ActionState> {
+  const { supabase, user } = await requireAdmin();
+  const body = ((formData.get("body") as string) ?? "").trim();
+  if (!body) return { error: "메모 내용을 입력해주세요." };
+
+  const { error } = await supabase.from("admin_notes").insert({
+    target_type: targetType,
+    target_id: targetId,
+    author_id: user.id,
+    body,
+  });
+  if (error) return { error: "메모 저장에 실패했습니다." };
+
+  revalidatePath(`/members/${targetId}`);
+  return { success: "메모가 저장되었습니다." };
 }
 
 // ---------------------------------------------------------------------------
