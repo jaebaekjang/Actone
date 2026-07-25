@@ -522,6 +522,15 @@ export async function updateCategory(
     description: formData.get("description") ?? "",
     sort_order: formData.get("sort_order"),
     is_active: formData.get("is_active") === "on",
+    icon: formData.get("icon") ?? "",
+    intro: formData.get("intro") ?? "",
+    read_level: formData.get("read_level"),
+    write_level: formData.get("write_level"),
+    comment_level: formData.get("comment_level"),
+    requires_approval: formData.get("requires_approval") === "on",
+    is_anonymous: formData.get("is_anonymous") === "on",
+    max_images: formData.get("max_images"),
+    allow_tags: formData.get("allow_tags") === "on",
   });
   if (!parsed.success) {
     return { error: "입력값을 확인해주세요." };
@@ -534,6 +543,15 @@ export async function updateCategory(
       description: parsed.data.description,
       sort_order: parsed.data.sort_order,
       is_active: parsed.data.is_active,
+      icon: parsed.data.icon || null,
+      intro: parsed.data.intro || null,
+      read_level: parsed.data.read_level,
+      write_level: parsed.data.write_level,
+      comment_level: parsed.data.comment_level,
+      requires_approval: parsed.data.requires_approval,
+      is_anonymous: parsed.data.is_anonymous,
+      max_images: parsed.data.max_images,
+      allow_tags: parsed.data.allow_tags,
     })
     .eq("id", categoryId);
   if (error) return { error: "카테고리 수정에 실패했습니다." };

@@ -10,7 +10,7 @@ import {
   type Profile,
 } from "@actone/shared";
 import { ConfirmButton } from "@/components/confirm-button";
-import { Card, MemberLevelBadge, PageHeader, StatusBadge } from "@/components/ui";
+import { MemberLevelBadge, PageHeader, StatusBadge } from "@/components/ui";
 import { requireAdmin } from "@/lib/admin";
 import { setSuspension } from "@/lib/actions";
 import { MemberLevelForm } from "./member-level-form";
@@ -30,6 +30,21 @@ interface MiniComment {
   content: string;
   status: string;
   created_at: string;
+}
+
+function Row({ label, children }: { label: string; children: React.ReactNode }) {
+  return (
+    <div className="flex justify-between gap-4 py-1.5">
+      <dt className="text-muted">{label}</dt>
+      <dd className="text-right text-foreground">{children}</dd>
+    </div>
+  );
+}
+
+function SectionTitle({ children }: { children: React.ReactNode }) {
+  return (
+    <h2 className="mb-3 border-b pb-2 font-semibold text-foreground">{children}</h2>
+  );
 }
 
 export default async function MemberDetailPage({
@@ -115,7 +130,7 @@ export default async function MemberDetailPage({
   const suspendBound = setSuspension.bind(null, id, !member.is_suspended);
 
   return (
-    <div className="space-y-6">
+    <div className="max-w-4xl space-y-8">
       <PageHeader
         title={member.nickname ?? "(온보딩 미완료)"}
         description={member.email ?? undefined}
@@ -136,103 +151,98 @@ export default async function MemberDetailPage({
         }
       />
 
-      <div className="grid gap-4 lg:grid-cols-2">
-        <Card>
-          <h2 className="font-semibold text-foreground">기본 정보</h2>
-          <dl className="mt-3 space-y-2 text-sm">
-            <div className="flex justify-between gap-4">
-              <dt className="text-muted">역할</dt>
-              <dd>
+      <div className="grid gap-x-10 gap-y-8 lg:grid-cols-2">
+        <section>
+          <SectionTitle>기본 정보</SectionTitle>
+          <dl className="divide-y text-sm">
+            <Row label="역할">
+              <StatusBadge
+                label={ROLE_LABELS[member.role] ?? member.role}
+                tone={member.role === "admin" ? "warning" : "neutral"}
+              />
+            </Row>
+            <Row label="회원 등급">
+              <MemberLevelBadge level={member.member_level} />
+            </Row>
+            <Row label="계정 상태">
+              {member.is_suspended ? (
                 <StatusBadge
-                  label={ROLE_LABELS[member.role] ?? member.role}
-                  tone={member.role === "admin" ? "warning" : "neutral"}
+                  label={
+                    member.suspended_until
+                      ? `정지 (~${formatDate(member.suspended_until)})`
+                      : "영구 정지"
+                  }
+                  tone="negative"
                 />
-              </dd>
-            </div>
-            <div className="flex justify-between gap-4">
-              <dt className="text-muted">회원 등급</dt>
-              <dd>
-                <MemberLevelBadge level={member.member_level} />
-              </dd>
-            </div>
-            <div className="flex justify-between gap-4">
-              <dt className="text-muted">계정 상태</dt>
-              <dd>
-                {member.is_suspended ? (
-                  <StatusBadge
-                    label={
-                      member.suspended_until
-                        ? `정지 (~${formatDate(member.suspended_until)})`
-                        : "영구 정지"
-                    }
-                    tone="negative"
-                  />
-                ) : (
-                  <StatusBadge label="정상" tone="positive" />
-                )}
-              </dd>
-            </div>
-            <div className="flex justify-between gap-4">
-              <dt className="text-muted">누적 경고</dt>
-              <dd className="text-foreground">{member.warning_count}회</dd>
-            </div>
-            <div className="flex justify-between gap-4">
-              <dt className="text-muted">배우 상태</dt>
-              <dd className="text-foreground">{member.actor_status ?? "-"}</dd>
-            </div>
-            <div className="flex justify-between gap-4">
-              <dt className="text-muted">활동 분야</dt>
-              <dd className="text-foreground">{member.activity_field ?? "-"}</dd>
-            </div>
-            <div className="flex justify-between gap-4">
-              <dt className="text-muted">지역</dt>
-              <dd className="text-foreground">{member.region ?? "-"}</dd>
-            </div>
-            <div className="flex justify-between gap-4">
-              <dt className="text-muted">가입일</dt>
-              <dd className="text-foreground">{formatDateTime(member.created_at)}</dd>
-            </div>
-            <div className="flex justify-between gap-4">
-              <dt className="text-muted">작성 글</dt>
-              <dd className="text-foreground">{postCountRes.count ?? 0}</dd>
-            </div>
-            <div className="flex justify-between gap-4">
-              <dt className="text-muted">작성 댓글</dt>
-              <dd className="text-foreground">{commentCountRes.count ?? 0}</dd>
-            </div>
-            <div className="flex justify-between gap-4">
-              <dt className="text-muted">받은 신고</dt>
-              <dd className="text-foreground">{receivedReports}</dd>
-            </div>
+              ) : (
+                <StatusBadge label="정상" tone="positive" />
+              )}
+            </Row>
+            <Row label="누적 경고">{member.warning_count}회</Row>
+            <Row label="배우 상태">{member.actor_status ?? "-"}</Row>
+            <Row label="활동 분야">{member.activity_field ?? "-"}</Row>
+            <Row label="지역">{member.region ?? "-"}</Row>
+            <Row label="가입일">{formatDateTime(member.created_at)}</Row>
+            <Row label="작성 글">{postCountRes.count ?? 0}</Row>
+            <Row label="작성 댓글">{commentCountRes.count ?? 0}</Row>
+            <Row label="받은 신고">{receivedReports}</Row>
           </dl>
-        </Card>
+        </section>
 
-        <Card>
-          <h2 className="font-semibold text-foreground">회원 등급 변경</h2>
-          <p className="mt-1 text-xs leading-relaxed text-muted">
+        <section>
+          <SectionTitle>회원 등급 변경</SectionTitle>
+          <p className="mb-4 text-xs leading-relaxed text-muted">
             튜터는 여기서만(수동으로만) 지정할 수 있습니다. 모든 변경은 로그에 기록됩니다.
           </p>
-          <div className="mt-4">
-            <MemberLevelForm userId={member.id} currentLevel={member.member_level} />
-          </div>
-        </Card>
+          <MemberLevelForm userId={member.id} currentLevel={member.member_level} />
+        </section>
       </div>
 
-      <Card>
-        <h2 className="font-semibold text-foreground">등급 변경 이력</h2>
-        <div className="mt-3 space-y-2">
-          {logs.length > 0 ? (
-            logs.map((log) => (
-              <div
-                key={log.id}
-                className="flex flex-wrap items-center justify-between gap-2 rounded-lg border bg-background px-3 py-2.5 text-sm"
-              >
-                <span className="text-foreground">
+      {canSuspend ? (
+        <div className="grid gap-x-10 gap-y-8 lg:grid-cols-2">
+          <section>
+            <SectionTitle>경고</SectionTitle>
+            <p className="mb-4 text-xs text-muted">경고는 누적되며 운영자 메모에도 자동 기록됩니다.</p>
+            <WarningForm userId={member.id} />
+          </section>
+          <section>
+            <SectionTitle>기간 정지</SectionTitle>
+            <p className="mb-4 text-xs text-muted">
+              정지 기간이 지나도 자동 해제되지 않습니다. 만료일은 참고용이며 해제는 상단 버튼으로 진행합니다.
+            </p>
+            <SuspensionForm userId={member.id} />
+          </section>
+        </div>
+      ) : null}
+
+      {hasUtm ? (
+        <section>
+          <SectionTitle>유입 정보 (UTM)</SectionTitle>
+          <dl className="grid gap-x-10 text-sm sm:grid-cols-2">
+            <Row label="Source">{member.utm_source ?? "-"}</Row>
+            <Row label="Medium">{member.utm_medium ?? "-"}</Row>
+            <Row label="Campaign">{member.utm_campaign ?? "-"}</Row>
+            <Row label="Referrer">
+              <span className="block max-w-[220px] truncate">{member.referrer ?? "-"}</span>
+            </Row>
+          </dl>
+        </section>
+      ) : null}
+
+      <section>
+        <SectionTitle>등급 변경 이력</SectionTitle>
+        {logs.length > 0 ? (
+          <ul className="divide-y text-sm">
+            {logs.map((log) => (
+              <li key={log.id} className="flex flex-wrap items-center justify-between gap-2 py-2">
+                <span className="flex items-center gap-2 text-foreground">
                   {log.previous_level
-                    ? (MEMBER_LEVEL_LABELS[log.previous_level as keyof typeof MEMBER_LEVEL_LABELS] ?? log.previous_level)
+                    ? MEMBER_LEVEL_LABELS[log.previous_level as keyof typeof MEMBER_LEVEL_LABELS] ??
+                      log.previous_level
                     : "-"}
                   {" → "}
-                  {MEMBER_LEVEL_LABELS[log.new_level as keyof typeof MEMBER_LEVEL_LABELS] ?? log.new_level}
+                  {MEMBER_LEVEL_LABELS[log.new_level as keyof typeof MEMBER_LEVEL_LABELS] ??
+                    log.new_level}
                   <StatusBadge
                     label={log.change_type === "manual" ? "수동" : "자동"}
                     tone={log.change_type === "manual" ? "neutral" : "warning"}
@@ -242,120 +252,73 @@ export default async function MemberDetailPage({
                   {log.reason ? `${log.reason} · ` : ""}
                   {formatDateTime(log.created_at)}
                 </span>
-              </div>
-            ))
+              </li>
+            ))}
+          </ul>
+        ) : (
+          <p className="text-sm text-muted">등급 변경 이력이 없습니다.</p>
+        )}
+      </section>
+
+      <div className="grid gap-x-10 gap-y-8 lg:grid-cols-2">
+        <section>
+          <SectionTitle>최근 게시글</SectionTitle>
+          {recentPosts.length > 0 ? (
+            <ul className="divide-y text-sm">
+              {recentPosts.map((p) => (
+                <li key={p.id}>
+                  <Link
+                    href={`/posts/${p.id}`}
+                    className="flex items-center justify-between gap-3 py-2 hover:text-accent-soft"
+                  >
+                    <span className="truncate text-foreground">{p.title}</span>
+                    <span className="shrink-0 text-xs text-muted">{formatDate(p.created_at)}</span>
+                  </Link>
+                </li>
+              ))}
+            </ul>
           ) : (
-            <p className="text-sm text-muted">등급 변경 이력이 없습니다.</p>
+            <p className="text-sm text-muted">작성한 게시글이 없습니다.</p>
           )}
-        </div>
-      </Card>
-
-      {canSuspend ? (
-        <div className="grid gap-4 lg:grid-cols-2">
-          <Card>
-            <h2 className="font-semibold text-foreground">경고</h2>
-            <p className="mt-1 text-xs text-muted">
-              경고는 누적되며 운영자 메모에도 자동 기록됩니다.
-            </p>
-            <div className="mt-4">
-              <WarningForm userId={member.id} />
-            </div>
-          </Card>
-          <Card>
-            <h2 className="font-semibold text-foreground">기간 정지</h2>
-            <p className="mt-1 text-xs text-muted">
-              정지 기간이 지나도 자동 해제되지 않습니다. 만료일은 참고용이며 해제는 상단 버튼으로 진행합니다.
-            </p>
-            <div className="mt-4">
-              <SuspensionForm userId={member.id} />
-            </div>
-          </Card>
-        </div>
-      ) : null}
-
-      {hasUtm ? (
-        <Card>
-          <h2 className="font-semibold text-foreground">유입 정보 (UTM)</h2>
-          <dl className="mt-3 grid gap-2 text-sm sm:grid-cols-2">
-            <div className="flex justify-between gap-4">
-              <dt className="text-muted">Source</dt>
-              <dd className="text-foreground">{member.utm_source ?? "-"}</dd>
-            </div>
-            <div className="flex justify-between gap-4">
-              <dt className="text-muted">Medium</dt>
-              <dd className="text-foreground">{member.utm_medium ?? "-"}</dd>
-            </div>
-            <div className="flex justify-between gap-4">
-              <dt className="text-muted">Campaign</dt>
-              <dd className="text-foreground">{member.utm_campaign ?? "-"}</dd>
-            </div>
-            <div className="flex justify-between gap-4">
-              <dt className="text-muted">Referrer</dt>
-              <dd className="max-w-[60%] truncate text-foreground">{member.referrer ?? "-"}</dd>
-            </div>
-          </dl>
-        </Card>
-      ) : null}
-
-      <div className="grid gap-4 lg:grid-cols-2">
-        <Card>
-          <h2 className="font-semibold text-foreground">최근 게시글</h2>
-          <div className="mt-3 space-y-2">
-            {recentPosts.length > 0 ? (
-              recentPosts.map((p) => (
-                <Link
-                  key={p.id}
-                  href={`/posts/${p.id}`}
-                  className="flex items-center justify-between gap-3 rounded-lg border bg-background px-3 py-2 text-sm hover:border-accent/40"
-                >
-                  <span className="truncate text-foreground">{p.title}</span>
-                  <span className="shrink-0 text-xs text-muted">{formatDate(p.created_at)}</span>
-                </Link>
-              ))
-            ) : (
-              <p className="text-sm text-muted">작성한 게시글이 없습니다.</p>
-            )}
-          </div>
-        </Card>
-        <Card>
-          <h2 className="font-semibold text-foreground">최근 댓글</h2>
-          <div className="mt-3 space-y-2">
-            {recentComments.length > 0 ? (
-              recentComments.map((c) => (
-                <Link
-                  key={c.id}
-                  href={`/posts/${c.post_id}`}
-                  className="flex items-center justify-between gap-3 rounded-lg border bg-background px-3 py-2 text-sm hover:border-accent/40"
-                >
-                  <span className="truncate text-foreground">{c.content}</span>
-                  <span className="shrink-0 text-xs text-muted">{formatDate(c.created_at)}</span>
-                </Link>
-              ))
-            ) : (
-              <p className="text-sm text-muted">작성한 댓글이 없습니다.</p>
-            )}
-          </div>
-        </Card>
+        </section>
+        <section>
+          <SectionTitle>최근 댓글</SectionTitle>
+          {recentComments.length > 0 ? (
+            <ul className="divide-y text-sm">
+              {recentComments.map((c) => (
+                <li key={c.id}>
+                  <Link
+                    href={`/posts/${c.post_id}`}
+                    className="flex items-center justify-between gap-3 py-2 hover:text-accent-soft"
+                  >
+                    <span className="truncate text-foreground">{c.content}</span>
+                    <span className="shrink-0 text-xs text-muted">{formatDate(c.created_at)}</span>
+                  </Link>
+                </li>
+              ))}
+            </ul>
+          ) : (
+            <p className="text-sm text-muted">작성한 댓글이 없습니다.</p>
+          )}
+        </section>
       </div>
 
-      <Card>
-        <h2 className="font-semibold text-foreground">운영자 메모</h2>
-        <div className="mt-3">
-          <NoteForm userId={member.id} />
-        </div>
-        <div className="mt-4 space-y-2">
+      <section>
+        <SectionTitle>운영자 메모</SectionTitle>
+        <NoteForm userId={member.id} />
+        <ul className="mt-4 divide-y text-sm">
           {notes.length > 0 ? (
             notes.map((note) => (
-              <div key={note.id} className="rounded-lg border bg-background px-3 py-2.5 text-sm">
+              <li key={note.id} className="py-2.5">
                 <p className="whitespace-pre-wrap text-foreground">{note.body}</p>
                 <p className="mt-1 text-xs text-muted">{formatDateTime(note.created_at)}</p>
-              </div>
+              </li>
             ))
           ) : (
-            <p className="text-sm text-muted">메모가 없습니다.</p>
+            <li className="py-2.5 text-muted">메모가 없습니다.</li>
           )}
-        </div>
-      </Card>
+        </ul>
+      </section>
     </div>
   );
 }

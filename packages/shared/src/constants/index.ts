@@ -7,6 +7,15 @@ export const MEMBER_LEVEL_LABELS: Record<MemberLevel, string> = {
   tutor: "튜터",
 };
 
+/** board access-level gate labels (categories.read/write/comment_level) */
+export const BOARD_LEVEL_LABELS: Record<string, string> = {
+  guest: "누구나(비회원 포함)",
+  new_member: "신규회원 이상",
+  regular_member: "정회원 이상",
+  tutor: "튜터 이상",
+  admin: "관리자만",
+};
+
 export const ROLES = ["member", "admin"] as const;
 export type Role = (typeof ROLES)[number];
 

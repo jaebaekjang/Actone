@@ -115,11 +115,23 @@ export const noticeSchema = z.object({
 
 export type NoticeInput = z.infer<typeof noticeSchema>;
 
+export const READ_LEVELS = ["guest", "new_member", "regular_member", "tutor"] as const;
+export const WRITE_LEVELS = ["new_member", "regular_member", "tutor", "admin"] as const;
+
 export const categoryEditSchema = z.object({
   name: z.string().trim().min(1).max(30),
   description: z.string().trim().max(300).optional().default(""),
   sort_order: z.coerce.number().int().min(0).max(999),
   is_active: z.boolean(),
+  icon: z.string().trim().max(8).optional().default(""),
+  intro: z.string().trim().max(500).optional().default(""),
+  read_level: z.enum(READ_LEVELS),
+  write_level: z.enum(WRITE_LEVELS),
+  comment_level: z.enum(WRITE_LEVELS),
+  requires_approval: z.boolean(),
+  is_anonymous: z.boolean(),
+  max_images: z.coerce.number().int().min(0).max(10),
+  allow_tags: z.boolean(),
 });
 
 export type CategoryEditInput = z.infer<typeof categoryEditSchema>;

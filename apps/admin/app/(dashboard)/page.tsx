@@ -5,7 +5,7 @@ import {
   MEMBER_LEVEL_LABELS,
   type AdminActivityLog,
 } from "@actone/shared";
-import { Card, EmptyRow, PageHeader } from "@/components/ui";
+import { PageHeader } from "@/components/ui";
 import { requireAdmin } from "@/lib/admin";
 
 export const dynamic = "force-dynamic";
@@ -128,34 +128,36 @@ export default async function AdminDashboardPage() {
     <div className="space-y-8">
       <PageHeader title="대시보드" description="액트원 커뮤니티 운영 현황" />
 
-      {/* KPI grid */}
-      <div className="grid grid-cols-2 gap-3 sm:grid-cols-3 xl:grid-cols-6">
+      {/* KPI strip — one bordered panel, divided cells (not many boxes) */}
+      <div className="grid grid-cols-2 divide-x divide-y overflow-hidden rounded-xl border sm:grid-cols-3 xl:grid-cols-6">
         {kpis.map((kpi) => (
-          <Link key={kpi.label} href={kpi.href}>
-            <Card className="p-4 transition-colors hover:border-accent/40">
-              <p className="text-xs text-muted">{kpi.label}</p>
-              <p
-                className={`mt-1 text-2xl font-bold ${
-                  kpi.alert && kpi.value > 0 ? "text-amber-400" : "text-foreground"
-                }`}
-              >
-                {kpi.value.toLocaleString()}
-              </p>
-            </Card>
+          <Link
+            key={kpi.label}
+            href={kpi.href}
+            className="px-4 py-3.5 transition-colors hover:bg-surface-soft"
+          >
+            <p className="text-xs text-muted">{kpi.label}</p>
+            <p
+              className={`mt-1 text-2xl font-bold tabular-nums ${
+                kpi.alert && kpi.value > 0 ? "text-amber-400" : "text-foreground"
+              }`}
+            >
+              {kpi.value.toLocaleString()}
+            </p>
           </Link>
         ))}
       </div>
 
-      <div className="grid gap-6 lg:grid-cols-2">
+      <div className="grid gap-x-10 gap-y-8 lg:grid-cols-2">
         {/* funnel */}
         <section>
-          <h2 className="font-semibold text-foreground">전환 퍼널</h2>
-          <Card className="mt-3 space-y-3">
+          <h2 className="mb-4 font-semibold text-foreground">전환 퍼널</h2>
+          <div className="space-y-3">
             {funnel.map((f) => (
               <div key={f.label}>
                 <div className="mb-1 flex items-center justify-between text-xs">
                   <span className="text-muted">{f.label}</span>
-                  <span className="font-medium text-foreground">
+                  <span className="font-medium tabular-nums text-foreground">
                     {f.value.toLocaleString()}
                     <span className="ml-1 text-muted">
                       ({total > 0 ? Math.round((f.value / total) * 100) : 0}%)
@@ -170,18 +172,18 @@ export default async function AdminDashboardPage() {
                 </div>
               </div>
             ))}
-          </Card>
+          </div>
         </section>
 
         {/* level distribution */}
         <section>
-          <h2 className="font-semibold text-foreground">회원 등급 분포</h2>
-          <Card className="mt-3 space-y-3">
+          <h2 className="mb-4 font-semibold text-foreground">회원 등급 분포</h2>
+          <div className="space-y-3">
             {levelDist.map((d) => (
               <div key={d.label}>
                 <div className="mb-1 flex items-center justify-between text-xs">
                   <span className="text-muted">{d.label}</span>
-                  <span className="font-medium text-foreground">
+                  <span className="font-medium tabular-nums text-foreground">
                     {d.value.toLocaleString()}
                     <span className="ml-1 text-muted">
                       ({total > 0 ? Math.round((d.value / total) * 100) : 0}%)
@@ -196,43 +198,44 @@ export default async function AdminDashboardPage() {
                 </div>
               </div>
             ))}
-          </Card>
+          </div>
         </section>
       </div>
 
-      <div className="grid gap-6 lg:grid-cols-2">
+      <div className="grid gap-x-10 gap-y-8 lg:grid-cols-2">
         {/* today's tasks */}
         <section>
-          <h2 className="font-semibold text-foreground">오늘 처리할 업무</h2>
-          <div className="mt-3 space-y-2">
-            {tasks.length > 0 ? (
-              tasks.map((t) => (
-                <Link
-                  key={t.label}
-                  href={t.href}
-                  className="flex items-center justify-between rounded-lg border bg-surface px-4 py-3 text-sm hover:border-accent/40"
-                >
-                  <span className="text-foreground">{t.label}</span>
-                  <span className="rounded-full bg-amber-500/15 px-2 py-0.5 text-xs font-medium text-amber-400">
-                    {t.value}건
-                  </span>
-                </Link>
-              ))
-            ) : (
-              <EmptyRow message="처리할 업무가 없습니다." />
-            )}
-          </div>
+          <h2 className="mb-3 font-semibold text-foreground">오늘 처리할 업무</h2>
+          {tasks.length > 0 ? (
+            <ul className="divide-y border-t">
+              {tasks.map((t) => (
+                <li key={t.label}>
+                  <Link
+                    href={t.href}
+                    className="flex items-center justify-between py-2.5 text-sm hover:text-accent-soft"
+                  >
+                    <span className="text-foreground">{t.label}</span>
+                    <span className="rounded-full bg-amber-500/15 px-2 py-0.5 text-xs font-medium text-amber-400">
+                      {t.value}건
+                    </span>
+                  </Link>
+                </li>
+              ))}
+            </ul>
+          ) : (
+            <p className="py-4 text-sm text-muted">처리할 업무가 없습니다.</p>
+          )}
         </section>
 
         {/* recent admin activity */}
         <section>
-          <h2 className="font-semibold text-foreground">최근 관리자 활동</h2>
-          <div className="mt-3 space-y-2">
-            {logs.length > 0 ? (
-              logs.map((log) => (
-                <div
+          <h2 className="mb-3 font-semibold text-foreground">최근 관리자 활동</h2>
+          {logs.length > 0 ? (
+            <ul className="divide-y border-t">
+              {logs.map((log) => (
+                <li
                   key={log.id}
-                  className="flex items-center justify-between gap-3 rounded-lg border bg-surface px-4 py-2.5 text-sm"
+                  className="flex items-center justify-between gap-3 py-2.5 text-sm"
                 >
                   <span className="truncate text-foreground">
                     {ADMIN_ACTIVITY_ACTION_LABELS[log.action] ?? log.action}
@@ -243,12 +246,12 @@ export default async function AdminDashboardPage() {
                   <span className="shrink-0 text-xs text-muted">
                     {formatDateTime(log.created_at)}
                   </span>
-                </div>
-              ))
-            ) : (
-              <EmptyRow message="활동 내역이 없습니다." />
-            )}
-          </div>
+                </li>
+              ))}
+            </ul>
+          ) : (
+            <p className="py-4 text-sm text-muted">활동 내역이 없습니다.</p>
+          )}
         </section>
       </div>
     </div>
