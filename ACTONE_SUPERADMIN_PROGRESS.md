@@ -53,7 +53,11 @@ Manus 스펙(`pasted_content.txt` 30개 섹션)을 **현재 Next.js + Supabase �
   대시보드·회원 상세·게시판 관리를 박스 대신 구분선(divide)·섹션 헤더·타이포 중심으로 재구성.
   대시보드 KPI는 12개 개별 카드 → 하나의 분할 패널로 통합.
 
-남은 항목: 게시글 일괄처리/게시판 이동/추천, 오디션 전용 필드(`audition_post_details` 신규),
+- **게시글 관리**: 체크박스 일괄 처리(숨김/복구/삭제), 인라인 게시판 이동(드롭다운),
+  상단 고정 정렬, 테이블형 UI. 신규 액션 `movePost`·`bulkSetPostStatus`(권한검사+활동로그).
+  목록 `community.view` 게이트.
+
+남은 항목: 게시글 추천 지정(신규 컬럼), 오디션 전용 필드(`audition_post_details` 신규),
 오프라인 모임 상태·신청자(`meetup_registrations` 신규) — 신규 마이그레이션 `0005` 필요.
 
 ## ⏭ 다음 단계 (우선순위)

@@ -318,6 +318,43 @@ export async function setCommentStatus(
   revalidatePath("/comments");
 }
 
+export async function movePost(postId: string, categoryId: string): Promise<void> {
+  const { supabase } = await requirePermission("community.manage");
+  const { data: cat } = await supabase
+    .from("categories")
+    .select("name")
+    .eq("id", categoryId)
+    .maybeSingle();
+  if (!cat) return;
+  await supabase.from("posts").update({ category_id: categoryId }).eq("id", postId);
+  await logActivity({
+    action: "post.move",
+    targetType: "post",
+    targetId: postId,
+    summary: `게시판 이동 → ${cat.name}`,
+    after: { category_id: categoryId },
+  });
+  revalidatePath("/posts");
+}
+
+export async function bulkSetPostStatus(
+  ids: string[],
+  status: "published" | "hidden" | "deleted",
+): Promise<void> {
+  const { supabase } = await requirePermission("community.manage");
+  const clean = ids.filter(Boolean).slice(0, 200);
+  if (clean.length === 0) return;
+  await supabase.from("posts").update({ status }).in("id", clean);
+  await logActivity({
+    action: "post.bulk_status",
+    targetType: "post",
+    targetId: null,
+    summary: `게시글 ${clean.length}건 상태 → ${status}`,
+    after: { status, count: clean.length },
+  });
+  revalidatePath("/posts");
+}
+
 // ---------------------------------------------------------------------------
 // reports
 // ---------------------------------------------------------------------------

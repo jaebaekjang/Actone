@@ -1,15 +1,10 @@
-import Link from "next/link";
 import {
-  formatDateTime,
-  POST_STATUS_LABELS,
-  siteConfig,
   type Category,
   type Post,
 } from "@actone/shared";
-import { ConfirmButton } from "@/components/confirm-button";
-import { EmptyRow, PageHeader, StatusBadge } from "@/components/ui";
-import { requireAdmin } from "@/lib/admin";
-import { setPostPinned, setPostStatus } from "@/lib/actions";
+import { EmptyRow, PageHeader } from "@/components/ui";
+import { requirePermission } from "@/lib/admin";
+import { PostsTable } from "./posts-table";
 
 export const dynamic = "force-dynamic";
 
@@ -19,7 +14,7 @@ export default async function PostsAdminPage({
   searchParams: Promise<{ q?: string; category?: string; status?: string }>;
 }) {
   const { q, category: categorySlug, status } = await searchParams;
-  const { supabase } = await requireAdmin();
+  const { supabase } = await requirePermission("community.view");
 
   const { data: categoriesData } = await supabase
     .from("categories")
@@ -31,6 +26,7 @@ export default async function PostsAdminPage({
   let query = supabase
     .from("posts")
     .select("*")
+    .order("is_pinned", { ascending: false })
     .order("created_at", { ascending: false })
     .limit(100);
   if (selectedCategory) query = query.eq("category_id", selectedCategory.id);
@@ -43,11 +39,10 @@ export default async function PostsAdminPage({
   }
   const { data } = await query;
   const posts = (data as Post[] | null) ?? [];
-  const categoryById = new Map(categories.map((c) => [c.id, c]));
 
   return (
     <div className="space-y-5">
-      <PageHeader title="게시글 관리" />
+      <PageHeader title="게시글 관리" description={`${posts.length}건 · 체크박스로 일괄 처리`} />
 
       <form className="flex flex-wrap gap-2">
         <input
@@ -87,74 +82,21 @@ export default async function PostsAdminPage({
         </button>
       </form>
 
-      <div className="space-y-2">
-        {posts.length > 0 ? (
-          posts.map((post) => (
-            <div
-              key={post.id}
-              className="flex flex-wrap items-center justify-between gap-3 rounded-lg border bg-surface px-4 py-3"
-            >
-              <div className="min-w-0 flex-1">
-                <div className="flex flex-wrap items-center gap-2 text-xs text-muted">
-                  <span>{categoryById.get(post.category_id)?.name ?? "-"}</span>
-                  <StatusBadge
-                    label={POST_STATUS_LABELS[post.status] ?? post.status}
-                    tone={
-                      post.status === "published"
-                        ? "positive"
-                        : post.status === "hidden"
-                          ? "warning"
-                          : "negative"
-                    }
-                  />
-                  {post.is_pinned ? <StatusBadge label="고정" tone="warning" /> : null}
-                  <span>{formatDateTime(post.created_at)}</span>
-                </div>
-                <a
-                  href={`${siteConfig.url}/posts/${post.id}`}
-                  target="_blank"
-                  rel="noreferrer noopener"
-                  className="mt-1 block truncate text-sm font-medium text-foreground hover:text-accent-soft"
-                >
-                  {post.title}
-                </a>
-              </div>
-              <div className="flex shrink-0 flex-wrap gap-1.5">
-                {post.status !== "published" ? (
-                  <ConfirmButton action={setPostStatus.bind(null, post.id, "published")} tone="positive">
-                    복구
-                  </ConfirmButton>
-                ) : null}
-                {post.status !== "hidden" ? (
-                  <ConfirmButton action={setPostStatus.bind(null, post.id, "hidden")}>
-                    숨김
-                  </ConfirmButton>
-                ) : null}
-                {post.status !== "deleted" ? (
-                  <ConfirmButton
-                    action={setPostStatus.bind(null, post.id, "deleted")}
-                    tone="danger"
-                    confirmMessage="이 글을 삭제 처리할까요?"
-                  >
-                    삭제
-                  </ConfirmButton>
-                ) : null}
-                <ConfirmButton action={setPostPinned.bind(null, post.id, !post.is_pinned)}>
-                  {post.is_pinned ? "고정 해제" : "고정"}
-                </ConfirmButton>
-                <Link
-                  href={`/posts/${post.id}`}
-                  className="inline-flex h-8 items-center rounded-lg border bg-surface-soft px-3 text-xs text-foreground hover:bg-surface-soft/70"
-                >
-                  내용
-                </Link>
-              </div>
-            </div>
-          ))
-        ) : (
-          <EmptyRow message="조건에 맞는 게시글이 없습니다." />
-        )}
-      </div>
+      {posts.length > 0 ? (
+        <PostsTable
+          posts={posts.map((p) => ({
+            id: p.id,
+            title: p.title,
+            status: p.status,
+            is_pinned: p.is_pinned,
+            category_id: p.category_id,
+            created_at: p.created_at,
+          }))}
+          categories={categories.map((c) => ({ id: c.id, name: c.name }))}
+        />
+      ) : (
+        <EmptyRow message="조건에 맞는 게시글이 없습니다." />
+      )}
     </div>
   );
 }
